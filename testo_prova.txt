@@ -1,1 +1,1 @@
-cioa questo è un testo di prova per vedere come funziona git
+cioa questo è un testo di prova per vedere come funziona git, modificato per vedere come funziona il commit e il merge, a
