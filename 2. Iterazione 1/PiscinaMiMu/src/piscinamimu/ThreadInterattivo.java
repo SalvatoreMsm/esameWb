@@ -70,7 +70,7 @@ public class ThreadInterattivo extends Thread{
             while(scelta != 20){
                 scelta = menu(bf);
                 switch(scelta){
-                    case 1:
+                    case 1: // Nuovo Corso
                         try{
                             String idCorso, risposta;
                             idCorso = g.aggiungiCorso();
@@ -85,7 +85,7 @@ public class ThreadInterattivo extends Thread{
                             System.out.println("OPS: qualcosa è andato storto!");
                         }
                         break;
-                    case 2:
+                    case 2: // Elimina Corso
                         try{
                             String idCorso="";
                             g.aggiungiLezione(idCorso);
@@ -97,51 +97,56 @@ public class ThreadInterattivo extends Thread{
                             System.out.println("Programmazione lezioni del corso piena!");
                         }*/
                         break;
-                    case 3:
+                    case 3: // Modifica Corso
                         System.out.println("Inserire ID Corso da modificare: ");
                         String idCorso = bf.readLine();
+                        try{
+                            g.cercaCorso(idCorso);
 
-                        if(sceltaModifica != 20){
-                            sceltaModifica=menuModificaCorso(bf);
-                            
-                            
-                            switch(sceltaModifica){                                                         
-                                case 1: // Elimina Lezione
-                                    try{
-                                        String risposta;
-                                        do{
-                                            g.eliminaLezione(idCorso);
-                                            System.out.println("Vuoi eliminare un'altra lezione? (Si/No)");
-                                            risposta=bf.readLine();
-                                        }while(risposta.equalsIgnoreCase("Si"));
-                                    }catch(Exception e){
-                                        System.out.println("OPS: qualcosa è andato storto!");
-                                    }                                    
-                                    break;
-                                case 2: //Elimina Corso
-                                    try{
-                                        g.eliminaCorso(idCorso);
-                                    }catch(Exception e){
-                                        System.out.println("OPS: qualcosa è andato storto!");
-                                    }
-                                    break;
-                                case 3: //Aggiungi Lezione
-                                    try{
-                                        String risposta;
-                                        do{
-                                            g.aggiungiLezione(idCorso);
-                                            System.out.println("Vuoi aggiungere un'altra lezione? (Si/No)");
-                                            risposta=bf.readLine();
-                                        }while(risposta.equalsIgnoreCase("Si"));
-                                        
-                                    }catch(Exception e){
-                                        System.out.println("OPS: qualcosa è andato storto!");
-                                    }
-                                    break;
-                                case 10:
-                                    g.stampaTutto(); // funzione di utilità
-                                    break;
+                            if(sceltaModifica != 20){
+                                sceltaModifica=menuModificaCorso(bf);
+
+
+                                switch(sceltaModifica){                                                         
+                                    case 1: // Elimina Lezione
+                                        try{
+                                            String risposta;
+                                            do{
+                                                g.eliminaLezione(idCorso);
+                                                System.out.println("Vuoi eliminare un'altra lezione? (Si/No)");
+                                                risposta=bf.readLine();
+                                            }while(risposta.equalsIgnoreCase("Si"));
+                                        }catch(Exception e){
+                                            System.out.println("OPS: qualcosa è andato storto!");
+                                        }                                    
+                                        break;
+                                    case 2: //Elimina Corso
+                                        try{
+                                            g.eliminaCorso(idCorso);
+                                        }catch(Exception e){
+                                            System.out.println("OPS: qualcosa è andato storto!");
+                                        }
+                                        break;
+                                    case 3: //Aggiungi Lezione
+                                        try{
+                                            String risposta;
+                                            do{
+                                                g.aggiungiLezione(idCorso);
+                                                System.out.println("Vuoi aggiungere un'altra lezione? (Si/No)");
+                                                risposta=bf.readLine();
+                                            }while(risposta.equalsIgnoreCase("Si"));
+
+                                        }catch(Exception e){
+                                            System.out.println("OPS: qualcosa è andato storto!");
+                                        }
+                                        break;
+                                    case 10:
+                                        g.stampaTutto(); // funzione di utilità
+                                        break;
+                                }
                             }
+                        }catch(CorsoNonPresenteException e) {
+                            System.out.println("Errore: " + e.getMessage() + ". Torna al menu principale.");
                         }
                         break;
                     case 10:
@@ -150,10 +155,10 @@ public class ThreadInterattivo extends Thread{
                 }
             }
             
-            
-        }catch(IOException e){
+        
+        } catch (IOException e) {
             System.out.println("ERRORE IN FASE DI I/O");
-            System.exit(-1);
+            System.exit(-1);  
         }
         
     }

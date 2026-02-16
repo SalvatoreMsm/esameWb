@@ -25,6 +25,30 @@ public class DescrizioneCorso {
         this.durata = durata;
         this.num_posti_occupati = num_posti_occupati;
     }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getTipologia_clienti() {
+        return tipologia_clienti;
+    }
+
+    public int getNum_posti() {
+        return num_posti;
+    }
+
+    public int getDurata() {
+        return durata;
+    }
+
+    public int getNum_posti_occupati() {
+        return num_posti_occupati;
+    }
+    
+    
+    
+    
     @Override
     public String toString() {
     return "Nome: " + nome +

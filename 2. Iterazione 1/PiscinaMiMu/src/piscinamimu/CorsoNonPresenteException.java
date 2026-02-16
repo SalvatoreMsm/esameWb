@@ -8,8 +8,10 @@ package piscinamimu;
  *
  * @author pmilo
  */
-public class ProgrammazionePienaException extends Exception{
-    public ProgrammazionePienaException(String nomeCorso) {
-        super("Il corso " + nomeCorso + " ha raggiunto il numero massimo di lezioni.");
+public class CorsoNonPresenteException extends Exception{
+    
+    public CorsoNonPresenteException(String idCorso) {
+        super("Il corso con id " + idCorso + " non è presente.");
     }
+    
 }

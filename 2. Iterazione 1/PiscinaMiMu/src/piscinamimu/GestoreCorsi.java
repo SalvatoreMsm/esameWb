@@ -20,6 +20,30 @@ public class GestoreCorsi {
         this.elencoCorsi = new HashMap<>();
     }
     
+        
+    public Corso cercaCorso(String idCorso) throws CorsoNonPresenteException{
+        Corso corso;
+        corso=elencoCorsi.get(idCorso);
+        
+        if (corso == null) {
+            throw new CorsoNonPresenteException(idCorso);
+        }
+
+        return corso;
+    }
+    
+    public void aggiungiCorso(String idCorso, DescrizioneCorso descrizione) throws CorsoGiaPresenteException {
+        Corso corso;
+        
+        if (elencoCorsi.containsKey(idCorso)) {
+            throw new CorsoGiaPresenteException(idCorso);
+        }
+
+        corso = new Corso(idCorso, descrizione);
+        elencoCorsi.put(idCorso, corso);
+    }
+
+    
     public synchronized void caricaCorsi(String nomeFile){
         
         try{
@@ -42,9 +66,12 @@ public class GestoreCorsi {
                 numPostiOccupati = Integer.parseInt(bf.readLine());
                 
                 descrizione = new DescrizioneCorso(nome, tipologiaClienti, numPosti, durata, numPostiOccupati);
-                corso = new Corso(idCorso, descrizione);
-                elencoCorsi.put(idCorso, corso);
                 
+                try{
+                    aggiungiCorso(idCorso, descrizione);
+                } catch (CorsoGiaPresenteException e) {
+                    System.out.println(e.getMessage());
+                }
             }
             System.out.println("Numero corsi caricati: " + elencoCorsi.size());
             bf.close();
@@ -56,7 +83,7 @@ public class GestoreCorsi {
         
     }
     
-    public synchronized void caricaLezioni(String nomeFile) {
+    public synchronized void caricaLezioni(String nomeFile){
 
         try {
             BufferedReader bf = new BufferedReader(new FileReader(nomeFile));
@@ -66,33 +93,41 @@ public class GestoreCorsi {
 
             // Leggendo il file guardo l'idCorso e capisco a quale corso appartiene
             while ((idCorso = bf.readLine()) != null) {
-                idLezione = bf.readLine();
-                oraInizio = bf.readLine();
-                oraFine = bf.readLine();
+                try{
+                    corso = cercaCorso(idCorso);
+                    idLezione = bf.readLine();
+                    oraInizio = bf.readLine();
+                    oraFine = bf.readLine();
 
-                System.out.println("Lezione letta: id=" + idLezione + ", corso=" + idCorso);
-                
-                lezione = new Lezione(idLezione, oraInizio, oraFine);
-
-                // Recupero il corso dalla Map dei corsi
-                corso = elencoCorsi.get(idCorso);
-                if (corso != null) {
+                    System.out.println("Lezione letta: id=" + idLezione + ", corso=" + idCorso);
                     
+                    if (corso.isLezionePresente(idLezione)) { //Sostanzialmente copre l'eccezione di lezionegiapresente però evita di far creare istanze inutili di lezione
+                       System.out.println("Errore: Lezione con ID " + idLezione + " già presente. Nessuna nuova istanza creata.");
+                        return;
+                    }
+                    
+                    lezione = new Lezione(idLezione, oraInizio, oraFine);
                     corso.aggiungiLezione(lezione);
-                } else {
-                    System.out.println("Corso con id " + idCorso + " non trovato!");
+                    
+                }catch (CorsoNonPresenteException e) {
+                System.out.println("Corso non trovato: " + idCorso + ", salto questa lezione.");
+                } catch (ProgrammazionePienaException e) {
+                    System.out.println("Programmazione piena per il corso " + idCorso + ", salto questa lezione.");
+                } catch (LezioneGiaPresenteException e) {
+                    System.out.println("Lezione già presente: " + e.getMessage() + ", salto questa lezione.");
                 }
+                
             }
-
-            bf.close();
-
+        
         } catch (IOException e) {
             System.out.println("ERRORE IN FASE DI I/O");
             System.exit(-1);
         }
     }
+
     
-    public synchronized void aggiungiLezione(String idNuovoCorso)throws ProgrammazionePienaException{ 
+    
+    public synchronized void aggiungiLezione(String idNuovoCorso){ 
         BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
         String idCorso = idNuovoCorso;
         String idLezione, oraInizio, oraFine;
@@ -105,27 +140,32 @@ public class GestoreCorsi {
                 idCorso = bf.readLine();
             }
             
-            corso=elencoCorsi.get(idCorso);
-            if (corso == null) {
-                System.out.println("Corso con id " + idCorso + " non trovato!");
-                return;
-            }
+            corso=cercaCorso(idCorso);
 
             System.out.println("ID lezione: ");
             idLezione = bf.readLine();
+            
+            if (corso.isLezionePresente(idLezione)) { //Sostanzialmente copre l'eccezione di lezionegiapresente però evita di far continuare a inserire dati se idLez e' gia presente
+               System.out.println("Errore: Lezione con ID " + idLezione + " già presente. Nessuna nuova istanza creata.");
+                return;
+            }
+            
             System.out.println("Ora inizio lezione: ");
             oraInizio = bf.readLine();
             System.out.println("Ora fine lezione: ");
             oraFine = bf.readLine();
             
             lez = new Lezione(idLezione, oraInizio, oraFine);
-            corso.aggiungiLezione(lez);
-
-            System.out.println("Lezione aggiunta al corso " + idCorso + " correttamente!");
-
-            // DA AGGIUNGERE CODICE PER ECCEZIONE
-            
-            
+            try {
+                corso.aggiungiLezione(lez);
+                System.out.println("Lezione aggiunta al corso " + idCorso + " correttamente!");
+            } catch (LezioneGiaPresenteException e) { //NON ENTRERA' MAI IN QUESTA, per togliere queste 2 righe dovrei togliere il throws LezioneGiaPresenteException dal corso.aggiungiLezione
+                System.out.println("Errore: " + e.getMessage() + ". Lezione non aggiunta.");
+            } catch (ProgrammazionePienaException e) {
+                System.out.println("Errore: corso pieno (" + idCorso + "). Lezione non aggiunta.");
+            }
+        }catch(CorsoNonPresenteException e){
+            System.out.println("Corso " + idCorso + " non presente");
         }catch (IOException e) {
             System.out.println("ERRORE IN FASE DI I/O");
             System.exit(-1);
@@ -160,12 +200,15 @@ public class GestoreCorsi {
             durata = Integer.parseInt(bf.readLine());  
             
             descrizione = new DescrizioneCorso(nome, tipologiaClienti, numPosti, durata, numPosti);
-            corso = new Corso(idCorso, descrizione);
-            
-            elencoCorsi.put(idCorso, corso);
-            
-            System.out.println("Corso " + idCorso + " aggiunto correttamente!");
-            return idCorso;
+            try {
+                aggiungiCorso(idCorso, descrizione);
+                System.out.println("Corso " + idCorso + " aggiunto correttamente!");
+                return idCorso;
+
+            } catch (CorsoGiaPresenteException e) {
+                System.out.println(e.getMessage());
+                return null;
+            }
         }catch (IOException e) {
             System.out.println("ERRORE IN FASE DI I/O");
             System.exit(-1);
@@ -174,49 +217,41 @@ public class GestoreCorsi {
     }
     
     
-    public synchronized void eliminaLezione(String idCorso){
+    public synchronized void eliminaLezione(String idCorso)throws CorsoNonPresenteException, IOException{
         BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
         Corso corso;
         String idLezione;
         try{
-            if(!elencoCorsi.containsKey(idCorso)){
-                System.out.println("Corso non trovato");
-                return;
-            }
+            corso=cercaCorso(idCorso);
+            
             System.out.println("ID Lezione che si desidera eliminare: ");
             idLezione = bf.readLine();   
-            corso=elencoCorsi.get(idCorso);
+            
+            corso.eliminaLezione(idLezione);
+            System.out.println("Lezione eliminata con successo");
 
-            if(!corso.getElencoLezioni().containsKey(idLezione)){
-                System.out.println("Lezione non trovata ");
-                return;
-            }
-            
-            corso.getElencoLezioni().remove(idLezione);
-            
-            System.out.println("ID Lezione che si desidera eliminare: ");
-                     
+        }catch (CorsoNonPresenteException | LezioneNonPresenteException e){
+            System.out.println(e.getMessage());                     
         }catch(IOException e) {
             System.out.println("ERRORE IN FASE DI I/O");
             System.exit(-1);
         }
     }
     
-    public synchronized void eliminaCorso(String idCorso){
+    public synchronized void eliminaCorso(String idCorso) throws CorsoNonPresenteException{
         BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
-
+        Corso corso;
+        
         try{
-            if(!elencoCorsi.containsKey(idCorso)){
-                System.out.println("Corso non trovato");
-                return;
-            }
+            corso = cercaCorso(idCorso);
 
             // Rimuove il corso (e quindi tutte le sue lezioni)
             // ATTENZIONE questo è vero solo se collegata al corso, quando la si collegherà ad altro si dovrà modificare e rimuovere le lezioni
             elencoCorsi.remove(idCorso);
-
             System.out.println("Corso " + idCorso + " eliminato correttamente!");
-
+        
+        } catch (CorsoNonPresenteException e) {
+            System.out.println(e.getMessage());
         }catch(Exception e) {
             System.out.println("ERRORE IN FASE DI Eliminazione");
             System.exit(-1);
