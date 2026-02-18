@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
-package piscinamimu;
+package com.mycompany.piscinamimu;
 
 /**
  *
@@ -15,14 +15,12 @@ public class PiscinaMiMu {
      */
     public static void main(String[] args) {
         
-        GestoreCorsi g = new GestoreCorsi();
-        ThreadInterattivo ti = new ThreadInterattivo(g);
-        //ThreadReport tr = new ThreadReport(g);
+        GestoreCorsi gc = new GestoreCorsi();
+        InterazioneUtente ti = new InterazioneUtente(gc);
+
         
-        //tr.setDaemon(true);
-        
-        ti.start();
-       // tr.start();
+        ti.avvia();
+       
         
         
     }

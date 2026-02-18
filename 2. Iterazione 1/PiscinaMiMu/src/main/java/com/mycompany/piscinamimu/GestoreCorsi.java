@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package piscinamimu;
+package com.mycompany.piscinamimu;
 import java.io.*;
 import java.util.*;
 /**
@@ -127,7 +127,7 @@ public class GestoreCorsi {
 
     
     
-    public synchronized void aggiungiLezione(String idNuovoCorso){ 
+    public synchronized void aggiungiLezione(String idNuovoCorso) throws LezioniConOrariNonValidiException{ 
         BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
         String idCorso = idNuovoCorso;
         String idLezione, oraInizio, oraFine;
@@ -157,6 +157,7 @@ public class GestoreCorsi {
             
             lez = new Lezione(idLezione, oraInizio, oraFine);
             try {
+                if(!lez.checkValidTime(lez.getOraInizio(), lez.getOraFine())) throw new LezioniConOrariNonValidiException(lez.getIdLezione());
                 corso.aggiungiLezione(lez);
                 System.out.println("Lezione aggiunta al corso " + idCorso + " correttamente!");
             } catch (LezioneGiaPresenteException e) { //NON ENTRERA' MAI IN QUESTA, per togliere queste 2 righe dovrei togliere il throws LezioneGiaPresenteException dal corso.aggiungiLezione
@@ -258,7 +259,155 @@ public class GestoreCorsi {
         }
     }
 
+    public synchronized void ModificaNome(String id_corso) throws CorsoNonPresenteException{
     
+    try{
+            Corso corso = elencoCorsi.get(id_corso);
+
+            if(corso == null) throw new CorsoNonPresenteException(id_corso);
+
+            BufferedReader bf = new BufferedReader(new InputStreamReader(System.in) );
+            System.out.println("Inserisci nuovo nome per il corso --->");
+
+            DescrizioneCorso cd = corso.getDescrizione();
+            cd.setNome(bf.readLine());
+        
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    
+    }
+    
+    public synchronized void ModificaTipologiaClienti(String id_corso) throws CorsoNonPresenteException{
+    
+        try{
+            Corso corso = elencoCorsi.get(id_corso);
+
+            if(corso == null) throw new CorsoNonPresenteException(id_corso);
+
+            BufferedReader bf = new BufferedReader(new InputStreamReader(System.in) );
+            System.out.println("Inserisci la nuova tipologia clienti --->");
+
+            DescrizioneCorso cd = corso.getDescrizione();
+            cd.setTipologiaClienti(bf.readLine());
+        
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    
+    }
+    
+    public synchronized void ModificaDurata(String id_corso) throws CorsoNonPresenteException{
+    
+        try{
+            Corso corso = elencoCorsi.get(id_corso);
+
+            if(corso == null) throw new CorsoNonPresenteException(id_corso);
+
+            BufferedReader bf = new BufferedReader(new InputStreamReader(System.in) );
+            System.out.println("Inserisci la nuova durata del corso --->");
+            int durata = Integer.parseInt(bf.readLine());
+
+            DescrizioneCorso cd = corso.getDescrizione();
+            cd.setDurata(durata);
+        
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    
+    }
+    
+    public synchronized void ModificaNumeroPosti(String id_corso) throws CorsoNonPresenteException{
+    
+        try{
+            Corso corso = elencoCorsi.get(id_corso);
+
+            if(corso == null) throw new CorsoNonPresenteException(id_corso);
+
+            BufferedReader bf = new BufferedReader(new InputStreamReader(System.in) );
+            System.out.println("Inserisci il nuovo numero di posti disponibili nel corso --->");
+            int num_posti = Integer.parseInt(bf.readLine());
+
+            DescrizioneCorso cd = corso.getDescrizione();
+            cd.setNumPosti(num_posti);
+
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    }
+    
+    public synchronized void ModificaPostiOccupati(String id_corso) throws CorsoNonPresenteException{
+    
+        try{
+            Corso corso = elencoCorsi.get(id_corso);
+
+            if(corso == null) throw new CorsoNonPresenteException(id_corso);
+
+            BufferedReader bf = new BufferedReader(new InputStreamReader(System.in) );
+            System.out.println("Inserisci il nuovo numero di posti occupati nel corso --->");
+            int num_posti_occupati = Integer.parseInt(bf.readLine());
+
+            DescrizioneCorso cd = corso.getDescrizione();
+            cd.setNumPostiOccupati(num_posti_occupati);
+        
+        }catch(IOException e){
+            System.out.println(e);
+        }
+    
+    }
+    
+    public synchronized void ModificaOraInizioLezione(String id_corso, String id_lezione) throws CorsoNonPresenteException, LezioneNonPresenteException,
+            LezioniConOrariNonValidiException{
+    
+        try{
+            Corso corso = elencoCorsi.get(id_corso);
+            BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+
+            if(corso == null) throw new CorsoNonPresenteException(id_corso);
+            Map<String, Lezione> elencoLezioniCorso = corso.getElencoLezioni();
+
+            if (elencoLezioniCorso.get(id_lezione) == null) throw new LezioneNonPresenteException(id_lezione); 
+
+            System.out.println("Inserire nuovo orario inizio lezione --->");
+            String ora_inizio = bf.readLine();
+            Lezione l = corso.getElencoLezioni().get(id_lezione);
+            l.setOraInizio(ora_inizio);
+
+            if(!l.checkValidTime(l.getOraInizio(), l.getOraFine())) throw new LezioniConOrariNonValidiException(id_lezione);
+
+        }catch(IOException e){System.out.println("Errore nell'IO");}
+    
+    }
+    
+    public synchronized void ModificaOraFineLezione(String id_corso, String id_lezione) throws CorsoNonPresenteException, LezioneNonPresenteException,
+            LezioniConOrariNonValidiException{
+        try{
+            Corso corso = elencoCorsi.get(id_corso);
+            BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+
+            if(corso == null) throw new CorsoNonPresenteException(id_corso);
+            Map<String, Lezione> elencoLezioniCorso = corso.getElencoLezioni();
+
+            if (elencoLezioniCorso.get(id_lezione) == null) throw new LezioneNonPresenteException(id_lezione); 
+
+            System.out.println("Inserire nuovo orario fine lezione --->");
+            String ora_fine = bf.readLine();
+            Lezione l = corso.getElencoLezioni().get(id_lezione);
+            l.setOraFine(ora_fine);
+
+            if(!l.checkValidTime(l.getOraInizio(), l.getOraFine())) throw new LezioniConOrariNonValidiException(id_lezione);
+        
+        }catch(IOException e){System.out.println("Errore nell'IO");}
+    
+    }
+    
+    public synchronized void AggiungiIstruttore(Istruttore is, String id_corso){
+    
+        Corso c = this.elencoCorsi.get(id_corso);
+        c.AggiungiIstruttore(is);
+        is.AssegnaCorso(c);
+    
+    }
     
     public synchronized void stampaTutto(){
         for(Corso c: elencoCorsi.values()){

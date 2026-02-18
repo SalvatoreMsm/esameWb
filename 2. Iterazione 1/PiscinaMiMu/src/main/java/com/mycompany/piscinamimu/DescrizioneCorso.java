@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package piscinamimu;
+package com.mycompany.piscinamimu;
 
 /**
  *
@@ -45,7 +45,21 @@ public class DescrizioneCorso {
     public int getNum_posti_occupati() {
         return num_posti_occupati;
     }
-    
+    public void setNome(String nome){
+        this.nome = nome;
+    }
+    public void setTipologiaClienti(String tipologia_clienti){
+        this.tipologia_clienti = tipologia_clienti;
+    }
+    public void setNumPosti(int num_posti){
+        this.num_posti = num_posti;
+    }
+    public void setDurata(int durata){
+        this.durata = durata;
+    }
+    public void setNumPostiOccupati(int num_posti_occupati){
+        this.num_posti_occupati = num_posti_occupati;
+    }
     
     
     
@@ -56,5 +70,5 @@ public class DescrizioneCorso {
            ", Posti totali: " + num_posti +
            ", Durata: " + durata + " lezioni" +
            ", Posti occupati: " + num_posti_occupati;
-}
+    }
 }

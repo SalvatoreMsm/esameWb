@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package piscinamimu;
+package com.mycompany.piscinamimu;
 import java.util.*;
 
 /**
@@ -15,6 +15,7 @@ public class Corso {
     private String idCorso;
     private DescrizioneCorso descrizione;
     private Map<String, Lezione> elencoLezioni;
+    private Map<String, Istruttore> elencoIstruttori;
     
     // Costruttore
 
@@ -22,6 +23,7 @@ public class Corso {
         this.idCorso = idCorso;
         this.descrizione = descrizione;
         this.elencoLezioni = new HashMap<>();
+        this.elencoIstruttori = new HashMap<>();
     }
 
     public String getIdCorso() {
@@ -46,6 +48,10 @@ public class Corso {
         }
         
         this.elencoLezioni.put(l.getIdLezione(), l);
+    }
+    
+    public void AggiungiIstruttore(Istruttore is){
+        this.elencoIstruttori.put(is.getIdIstruttore(), is);
     }
 
     public void eliminaLezione(String idLezione) throws LezioneNonPresenteException {
@@ -75,19 +81,29 @@ public class Corso {
     @Override
     public String toString() {
         String s;
-        s = "ID Corso: " + idCorso + "\n" +
-                   descrizione + "\n";
+    s = "ID Corso: " + idCorso + "\n" +
+               descrizione + "\n";
 
-        if (elencoLezioni != null && !elencoLezioni.isEmpty()) {
-            s += "Lezioni:\n";
-            for (Lezione l : elencoLezioni.values()) {
-                s += l + "\n"; 
-            }
-        } else {
-            s += "Nessuna lezione presente.\n";
+    if (elencoLezioni != null && !elencoLezioni.isEmpty()) {
+        s += "Lezioni:\n";
+        for (Lezione l : elencoLezioni.values()) {
+            s += l + "\n"; 
         }
+    } else {
+        s += "Nessuna lezione presente.\n";
+    }
+    
+    if(elencoIstruttori != null && !elencoIstruttori.isEmpty()){
+    
+        s += "Istruttori\n";
+        for(Istruttore is : elencoIstruttori.values()){
+            s += is + "\n";
+        }
+    
+    }
+    else s += "Nessun istruttore presente";
 
-        return s;
+    return s;
     }
 
 
