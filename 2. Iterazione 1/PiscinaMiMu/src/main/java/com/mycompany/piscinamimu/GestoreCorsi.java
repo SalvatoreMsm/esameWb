@@ -197,8 +197,16 @@ public class GestoreCorsi {
             tipologiaClienti = bf.readLine();
             System.out.println("Numero posti: ");
             numPosti = Integer.parseInt(bf.readLine());
+            if (numPosti <= 0) {
+                System.out.println("Errore: il numero di posti deve essere maggiore di 0.");
+                return null;
+            }
             System.out.println("Durata corso: ");
-            durata = Integer.parseInt(bf.readLine());  
+            durata = Integer.parseInt(bf.readLine()); 
+            if (durata <= 0) {
+                System.out.println("Errore: la durata deve essere maggiore di 0.");
+                return null;
+            }
             
             descrizione = new DescrizioneCorso(nome, tipologiaClienti, numPosti, durata, numPosti);
             try {
@@ -225,12 +233,16 @@ public class GestoreCorsi {
         try{
             corso=cercaCorso(idCorso);
             
+            if (corso.isSenzaLezioni()) {
+                throw new CorsoSenzaLezioniException(idCorso);
+            }
             System.out.println("ID Lezione che si desidera eliminare: ");
             idLezione = bf.readLine();   
             
             corso.eliminaLezione(idLezione);
             System.out.println("Lezione eliminata con successo");
-
+        }catch (CorsoSenzaLezioniException e) {
+        System.out.println("Errore: il corso non contiene lezioni.");
         }catch (CorsoNonPresenteException | LezioneNonPresenteException e){
             System.out.println(e.getMessage());                     
         }catch(IOException e) {
@@ -240,10 +252,8 @@ public class GestoreCorsi {
     }
     
     public synchronized void eliminaCorso(String idCorso) throws CorsoNonPresenteException{
-        BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+//        BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
         Corso corso;
-        
-        try{
             corso = cercaCorso(idCorso);
 
             // Rimuove il corso (e quindi tutte le sue lezioni)
@@ -251,12 +261,6 @@ public class GestoreCorsi {
             elencoCorsi.remove(idCorso);
             System.out.println("Corso " + idCorso + " eliminato correttamente!");
         
-        } catch (CorsoNonPresenteException e) {
-            System.out.println(e.getMessage());
-        }catch(Exception e) {
-            System.out.println("ERRORE IN FASE DI Eliminazione");
-            System.exit(-1);
-        }
     }
 
     public synchronized void ModificaNome(String id_corso) throws CorsoNonPresenteException{

@@ -53,9 +53,13 @@ public class Corso {
     public void AggiungiIstruttore(Istruttore is){
         this.elencoIstruttori.put(is.getIdIstruttore(), is);
     }
+    public boolean isSenzaLezioni() {
+        return elencoLezioni.isEmpty();
+    }
 
     public void eliminaLezione(String idLezione) throws LezioneNonPresenteException {
         Lezione rimossa;
+
         rimossa = elencoLezioni.remove(idLezione);
 
         if (rimossa == null) {

@@ -11,7 +11,7 @@ import java.io.*;
 public class InterazioneUtente{
     
     private GestoreCorsi gc;
-    private GestoreIstruttori i = new GestoreIstruttori(); //da cambiare con costruttori
+    private GestoreIstruttori gi = new GestoreIstruttori(); //da cambiare con costruttori
     
     public InterazioneUtente(GestoreCorsi g){
         this.gc = g;
@@ -37,7 +37,7 @@ public class InterazioneUtente{
         return 0;
     }
     
-        public int menuModificaCorso(BufferedReader bf){
+    public int menuModificaCorso(BufferedReader bf){
         try{
             System.out.println("1. Elimina Lezione.");
             System.out.println("2. Elimina Corso.");
@@ -55,7 +55,7 @@ public class InterazioneUtente{
         return 0;
     }
         
-        public int menuModificaAttributi(BufferedReader bf){
+    public int menuModificaAttributi(BufferedReader bf){
         try{
             System.out.println("1. Modifica nome.");
             System.out.println("2. Modifica Tipologia Clienti.");
@@ -74,7 +74,7 @@ public class InterazioneUtente{
         return 0;
     }  
         
-        public int menuModificaAttributiLezione(BufferedReader bf){
+    public int menuModificaAttributiLezione(BufferedReader bf){
         try{
             System.out.println("1. Modifica Ora Inizio.");
             System.out.println("2. Modifica Ora Fine.");
@@ -87,239 +87,208 @@ public class InterazioneUtente{
             System.exit(-1);
         }
         return 0;
-    }  
+    }
+    
+    // FUNZIONI CHE VERRANNO UTILIZZATE NEI CASE
+    
+    private void gestisciNuovoCorso(BufferedReader bf) throws IOException {
+        try {
+            String idCorso, risposta; 
+            idCorso = gc.aggiungiCorso();
+            do {
+                System.out.println("Vuoi aggiungere una lezione? (Si/No)");
+                risposta = bf.readLine();
+                if (risposta.equalsIgnoreCase("Si")) 
+                    gc.aggiungiLezione(idCorso);
+                
+            } while (risposta.equalsIgnoreCase("Si"));
+        } catch (Exception e) {
+            System.out.println("OPS: qualcosa è andato storto!");
+        }
+    }
+    
+    private void gestisciModificaCorso(BufferedReader bf) throws IOException {
+        String idCorso;
+        
+        System.out.print("Inserire ID Corso da modificare: ");
+        idCorso = bf.readLine();
+        try {
+            gc.cercaCorso(idCorso);
+
+            int sceltaModifica;
+            do {
+                sceltaModifica = menuModificaCorso(bf);
+                switch (sceltaModifica) {
+                    case 1: 
+                            gestisciEliminaLezione(bf, idCorso);
+                            break;
+                    case 2: // Da pulire
+                            try {
+                                 gc.eliminaCorso(idCorso);
+                                 System.out.println("Corso eliminato con successo.");
+                             } catch (CorsoNonPresenteException e) {
+                                 System.out.println("Errore: " + e.getMessage());
+                             } catch (Exception e) {
+                                 System.out.println("OPS: qualcosa è andato storto!");
+                             }
+                            break;
+                    case 3: 
+                            gestisciAggiungiLezione(bf, idCorso);
+                            break;
+                    case 4:     
+                            gestisciModificaAttributiCorso(bf, idCorso);
+                            break;
+                    case 10:
+                            gc.stampaTutto();
+                            break;
+                }
+            } while (sceltaModifica != 20);
+
+        } catch (CorsoNonPresenteException e) {
+            System.out.println("Errore: " + e.getMessage() + ". Torna al menu principale.");
+        }
+    }
     
     
-    public void avvia(){
+    private void gestisciEliminaLezione(BufferedReader bf, String idCorso) throws IOException {
+        String risposta;
+        do {
+            try {
+                gc.eliminaLezione(idCorso);
+            }catch(Exception e) {
+                System.out.println("OPS: qualcosa è andato storto!");
+            }
+            System.out.println("Vuoi eliminare un'altra lezione? (Si/No)");
+            risposta = bf.readLine();
+        } while (risposta.equalsIgnoreCase("Si"));
+    }
+    
+    
+    private void gestisciAggiungiLezione(BufferedReader bf, String idCorso) throws IOException {
+        String risposta;
+        do {
+            try {
+                gc.aggiungiLezione(idCorso);
+            } catch (Exception e) {
+                System.out.println("OPS: qualcosa è andato storto!");
+            }
+            System.out.println("Vuoi aggiungere un'altra lezione? (Si/No)");
+            risposta = bf.readLine();
+        } while (risposta.equalsIgnoreCase("Si"));
+    }
+    
+    private void gestisciModificaAttributiCorso(BufferedReader bf, String idCorso) throws IOException {
+        int scelta;
+        do {
+            scelta = menuModificaAttributi(bf);
+            switch (scelta) {
+                case 1:
+                        try { gc.ModificaNome(idCorso); }
+                        catch(Exception e){ System.out.println("OPS: qualcosa è andato storto!"); }
+                        break;
+                case 2:
+                        try { gc.ModificaTipologiaClienti(idCorso); }
+                        catch(Exception e){ System.out.println("OPS: qualcosa è andato storto!"); }
+                        break;
+                case 3:
+                        try { gc.ModificaNumeroPosti(idCorso); }
+                        catch(Exception e){ System.out.println("OPS: qualcosa è andato storto!"); }
+                        break;
+                case 4:
+                        try { gc.ModificaDurata(idCorso); }
+                        catch(Exception e){ System.out.println("OPS: qualcosa è andato storto!"); }
+                        break;
+                
+                case 5:
+                        try { gc.ModificaPostiOccupati(idCorso); }
+                        catch(Exception e){ System.out.println("OPS: qualcosa è andato storto!"); }
+                        break;
+                
+                case 6:
+                        gestisciModificaLezione(bf, idCorso);
+                        break;
+
+            }
+        } while (scelta != 20);
+    }
+    
+    private void gestisciModificaLezione(BufferedReader bf, String idCorso) throws IOException {
+        String idLezione; 
+        
+        System.out.print("Inserire ID Lezione: ");
+        idLezione = bf.readLine();
+
+        int scelta;
+        do {
+            scelta = menuModificaAttributiLezione(bf);
+            switch (scelta) {
+                case 1:
+                    try { gc.ModificaOraInizioLezione(idCorso, idLezione); }
+                    catch(Exception e){ System.out.println("OPS: qualcosa è andato storto!"); }
+                    break;
+                
+                case 2:
+                    try { gc.ModificaOraFineLezione(idCorso, idLezione); }
+                    catch(Exception e){ System.out.println("OPS: qualcosa è andato storto!"); }
+                    break;
+                
+            }
+        } while (scelta != 20);
+    }
+
+    
+    
+    public void avvia() {
         BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
         String nomeFileCorsi, nomeFileLezioni;
-        int scelta = 0;
-        int sceltaModifica = 0;
-        int sceltaModificaAttributo = 0;
-        int sceltaModificaAttributoLezione = 0;
-
-        try{
-            
-            System.out.println("Nome file corsi: ");
+        try {
+            System.out.print("Nome file corsi: ");
             nomeFileCorsi = bf.readLine();
             gc.caricaCorsi(nomeFileCorsi);
-            System.out.println("Nome file lezioni: ");
+
+            System.out.print("Nome file lezioni: ");
             nomeFileLezioni = bf.readLine();
             gc.caricaLezioni(nomeFileLezioni);
-            
-            while(scelta != 20){
-                scelta = menu(bf);
-                switch(scelta){
-                    case 1: // Nuovo Corso
-                        try{
-                            String idCorso, risposta;
-                            idCorso = gc.aggiungiCorso();
-                            do{
-                                System.out.println("Vuoi aggiungere una lezione? (Si/No)");
-                                risposta=bf.readLine();
-                                if(risposta.equalsIgnoreCase("Si"))
-                                    gc.aggiungiLezione(idCorso);
-                            }while(risposta.equalsIgnoreCase("Si"));
 
-                        }catch(Exception e){
+            int scelta;
+            do {
+                scelta = menu(bf); 
+                switch (scelta) {
+                    case 1: // NUOVO CORSO
+                            gestisciNuovoCorso(bf);  
+                            break;
+                    case 2: // NUOVA LEZIONE
+                            String idCorso;
+                            System.out.print("Inserire ID del corso a cui aggiungere una lezione: ");
+                            idCorso = bf.readLine(); 
+                            gestisciAggiungiLezione(bf, idCorso);        
+                            break;
+                    case 3: // MODIFICA CORSO
+                            gestisciModificaCorso(bf);       
+                            break;
+                    case 4: // ASSUMI ISTRUTTORE                     
+                        try {
+                            gi.AssumiIstruttore();
+                        } catch (IstruttoreGiaAssuntoException e) {
+                            System.out.println(e.getMessage());
+                        } catch (Exception e) {
                             System.out.println("OPS: qualcosa è andato storto!");
                         }
                         break;
-                    case 2: // Elimina Corso
-                        try{
-                            String idCorso="";
-                            gc.aggiungiLezione(idCorso);
-                        }catch(LezioniConOrariNonValidiException e){System.out.println(e.getMessage());}
-                        catch(Exception e){
-                            System.out.println("OPS: qualcosa è andato storto!");
-                        }
-                        /* Da inserire dopo aver sviluppato il codice dell'eccezione in GestoreCorsi
-                        catch(ProgrammazionePienaException e){
-                            System.out.println("Programmazione lezioni del corso piena!");
-                        }*/
-                        break;
-                    case 3: // Modifica Corso
-                        System.out.println("Inserire ID Corso da modificare: ");
-                        String idCorso = bf.readLine();
-                        try{
-                            gc.cercaCorso(idCorso); //questo non è superfluo?
-
-                            if(sceltaModifica != 20){
-                                sceltaModifica=menuModificaCorso(bf);
-
-
-                                switch(sceltaModifica){                                                         
-                                    case 1: // Elimina Lezione
-                                        try{
-                                            String risposta;
-                                            do{
-                                                gc.eliminaLezione(idCorso);
-                                                System.out.println("Vuoi eliminare un'altra lezione? (Si/No)");
-                                                risposta=bf.readLine();
-                                            }while(risposta.equalsIgnoreCase("Si"));
-                                        }catch(Exception e){
-                                            System.out.println("OPS: qualcosa è andato storto!");
-                                        }                                    
-                                        break;
-                                    case 2: //Elimina Corso
-                                        try{
-                                            gc.eliminaCorso(idCorso);
-                                        }catch(Exception e){
-                                            System.out.println("OPS: qualcosa è andato storto!");
-                                        }
-                                        break;
-                                    case 3: //Aggiungi Lezione
-                                        try{
-                                            String risposta;
-                                            do{
-                                                gc.aggiungiLezione(idCorso);
-                                                System.out.println("Vuoi aggiungere un'altra lezione? (Si/No)");
-                                                risposta=bf.readLine();
-                                            }while(risposta.equalsIgnoreCase("Si"));
-
-                                        }catch(Exception e){
-                                            System.out.println("OPS: qualcosa è andato storto!");
-                                        }
-                                        break;
-                                    case 4: //Modifica Attributi corso
-                                       
-                                        do{    
-                                            sceltaModificaAttributo = menuModificaAttributi(bf);
-                                        
-                                        switch(sceltaModificaAttributo){
-                                        
-                                            case 1: //modifica nome corso
-                                                try{
-                                                     //inserire tutta questa parte di messaggi a schermo e bf.readLine() 
-                                                    gc.ModificaNome(idCorso);             //all'interno di modificaNome stesso e aggiungere le exception con 
-                                                }catch(CorsoNonPresenteException e){                                               //la classe apposita 
-                                                    System.out.println(e.getMessage());
-                                                }catch(Exception e){System.out.println("OPS: qualcosa è andato storto!");}
-                                                    break;
-                                                    
-                                            case 2:
-                                                try{
-                                                    
-                                                    gc.ModificaTipologiaClienti(idCorso);
-                                                }catch(CorsoNonPresenteException e){                                               //la classe apposita 
-                                                    System.out.println(e.getMessage());
-                                                }
-                                                catch(Exception e){
-                                                    System.out.println("OPS: qualcosa è andato storto!");
-                                                }
-                                                    break;
-                                                    
-                                            case 3:
-                                                try{
-                                                    gc.ModificaNumeroPosti(idCorso);
-                                                }catch(CorsoNonPresenteException e){                                               //la classe apposita 
-                                                    System.out.println(e.getMessage());
-                                                }
-                                                catch(Exception e){
-                                                    System.out.println("OPS: qualcosa è andato storto!");
-                                                }
-                                                    break;
-                                            
-                                            case 4:
-                                                try{
-                                                    gc.ModificaDurata(idCorso);
-                                                }catch(CorsoNonPresenteException e){                                               //la classe apposita 
-                                                    System.out.println(e.getMessage());
-                                                }catch(Exception e){
-                                                    System.out.println("OPS: qualcosa è andato storto!");
-                                                }
-                                                    break;
-                                            
-                                            case 5:
-                                                try{
-                                                    gc.ModificaPostiOccupati(idCorso);
-                                                }catch(CorsoNonPresenteException e){                                               //la classe apposita 
-                                                    System.out.println(e.getMessage());
-                                                }
-                                                catch(Exception e){
-                                                    System.out.println("OPS: qualcosa è andato storto!");
-                                                }
-                                                    break;
-                                            case 6: 
-                                                
-                                                System.out.println("Inserire ID Lezione");
-                                                String idLezione = bf.readLine();
-                                                
-                                                do{
-                                                
-                                                   sceltaModificaAttributoLezione = menuModificaAttributiLezione(bf); 
-                                                   
-                                                   switch(sceltaModificaAttributoLezione){
-                                                   
-                                                       case 1:
-                                                           try{
-                                                               gc.ModificaOraInizioLezione(idCorso, idLezione);
-                                                               
-                                                           }catch(LezioniConOrariNonValidiException e){System.out.println(e.getMessage());}
-                                                           catch(CorsoNonPresenteException e){System.out.println(e.getMessage());}
-                                                           catch(LezioneNonPresenteException e){System.out.println(e.getMessage());
-                                                           sceltaModificaAttributoLezione = 20;}
-                                                           catch(Exception e){
-                                                           System.out.println("OPS: qualcosa è andato storto!");
-                                                           }
-                                                        break;
-                                                        
-                                                        case 2:
-                                                           try{
-                                                               gc.ModificaOraFineLezione(idCorso, idLezione);
-                                                               
-                                                           }catch(LezioniConOrariNonValidiException e){System.out.println(e.getMessage());}
-                                                           catch(CorsoNonPresenteException e){System.out.println(e.getMessage());}
-                                                           catch(LezioneNonPresenteException e){System.out.println(e.getMessage());
-                                                            sceltaModificaAttributoLezione = 20;}
-                                                           catch(Exception e){
-                                                           System.out.println("OPS: qualcosa è andato storto!");
-                                                           }
-                                                        break;
-                                                   
-                                                   }
-                                                
-                                                }while(sceltaModificaAttributoLezione != 20);
-                                                
-                                                break;
-                                                
-                                            
-                                        }
-                                        }while(sceltaModificaAttributo != 20);
-                                        break;
-                                    case 10:
-                                        gc.stampaTutto(); // funzione di utilità
-                                        break;
-                                }
-                            }
-                        }catch(CorsoNonPresenteException e) {
-                            System.out.println("Errore: " + e.getMessage() + ". Torna al menu principale.");
-                        }
-                        break;
-                    case 4: //Assumi Istruttore    
-                        try{                                                
-                            i.AssumiIstruttore();
-                        }catch(IstruttoreGiaAssuntoException e){System.out.println(e.getMessage());}
-                        catch(Exception e){
-                          System.out.println("OPS: qualcosa è andato storto!");
-                          }
-                        break;
-   
-                    case 10:
-                        gc.stampaTutto(); // funzione di utilità
-                        break;
-                    case 11: //Stampa Lista Istruttori
-                        i.StampaTutto();
-                        break;
+                    
+                    case 10: // STAMPA TUTTO DEI CORSI (UTILITY)
+                            gc.stampaTutto();     
+                            break;
+                    case 11: // STAMPA TUTTO DEGLI ISTRUTTORI (UTILITY)
+                            gi.StampaTutto();               
+                            break;
                 }
-            }
-            
-        
+            } while (scelta != 20);
+
         } catch (IOException e) {
             System.out.println("ERRORE IN FASE DI I/O");
-            System.exit(-1);  
+            System.exit(-1);
         }
-        
     }
     
 }
