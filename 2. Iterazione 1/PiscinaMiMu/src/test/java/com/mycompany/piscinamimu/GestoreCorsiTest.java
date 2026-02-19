@@ -64,12 +64,12 @@ public class GestoreCorsiTest {
         );
     }
 
-    /*@Test
+    @Test
     void eliminaCorso_nonPresente() {
         assertThrows(CorsoNonPresenteException.class, () -> 
             gestore.eliminaCorso("nessuno")
         );
-    }*/
+    }
 
     @Test
     void aggiungiLezione_alCorsoEsistente() throws Exception {

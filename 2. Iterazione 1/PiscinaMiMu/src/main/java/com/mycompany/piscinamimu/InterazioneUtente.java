@@ -25,8 +25,9 @@ public class InterazioneUtente{
             System.out.println("2. Inserisci nuova lezione.");
             System.out.println("3. Modifica un corso.");
             System.out.println("4. Assumi Istruttore");
+            System.out.println("5. Assegna Istruttore Ad Un Corso");
             System.out.println("10. Stampa Corsi.");
-            System.out.println("11. Stampa Istruttori");
+            System.out.println("11. Stampa Istruttori Disponibili");
 
             System.out.println("20. EXIT.");
             System.out.println("INSERIRE LA SCELTA --->");
@@ -43,7 +44,7 @@ public class InterazioneUtente{
             System.out.println("1. Elimina Lezione.");
             System.out.println("2. Elimina Corso.");
             System.out.println("3. Aggiungi Lezione.");
-            System.out.println("4. Modifica Attributi Corso");
+            System.out.println("4. Modifica Attributi Corso");            
             System.out.println("10 Stampa Corsi.");           
 
             System.out.println("20. EXIT.");
@@ -185,23 +186,28 @@ public class InterazioneUtente{
             switch (scelta) {
                 case 1:
                         try { gc.ModificaNome(idCorso); }
+                        catch(CorsoNonPresenteException e){System.out.println(e.getMessage());}
                         catch(Exception e){ System.out.println("OPS: qualcosa è andato storto!"); }
                         break;
                 case 2:
                         try { gc.ModificaTipologiaClienti(idCorso); }
+                        catch(CorsoNonPresenteException e){System.out.println(e.getMessage());}
                         catch(Exception e){ System.out.println("OPS: qualcosa è andato storto!"); }
                         break;
                 case 3:
                         try { gc.ModificaNumeroPosti(idCorso); }
+                        catch(CorsoNonPresenteException e){System.out.println(e.getMessage());}
                         catch(Exception e){ System.out.println("OPS: qualcosa è andato storto!"); }
                         break;
                 case 4:
                         try { gc.ModificaDurata(idCorso); }
+                        catch(CorsoNonPresenteException e){System.out.println(e.getMessage());}
                         catch(Exception e){ System.out.println("OPS: qualcosa è andato storto!"); }
                         break;
                 
                 case 5:
                         try { gc.ModificaPostiOccupati(idCorso); }
+                        catch(CorsoNonPresenteException e){System.out.println(e.getMessage());}
                         catch(Exception e){ System.out.println("OPS: qualcosa è andato storto!"); }
                         break;
                 
@@ -225,11 +231,17 @@ public class InterazioneUtente{
             switch (scelta) {
                 case 1:
                     try { gc.ModificaOraInizioLezione(idCorso, idLezione); }
+                    catch(LezioneNonPresenteException e){System.out.println(e.getMessage());
+                    scelta = 20;}
+                    catch(LezioniConOrariNonValidiException e){System.out.println(e.getMessage());}
                     catch(Exception e){ System.out.println("OPS: qualcosa è andato storto!"); }
                     break;
                 
                 case 2:
                     try { gc.ModificaOraFineLezione(idCorso, idLezione); }
+                    catch(LezioneNonPresenteException e){System.out.println(e.getMessage());
+                    scelta = 20;}
+                    catch(LezioniConOrariNonValidiException e){System.out.println(e.getMessage());}
                     catch(Exception e){ System.out.println("OPS: qualcosa è andato storto!"); }
                     break;
                 
@@ -275,13 +287,38 @@ public class InterazioneUtente{
                             break;
                     case 4: // ASSUMI ISTRUTTORE                     
                             try {
-                                gi.AssumiIstruttore();
+                                System.out.println("Inserisci ID istruttore --->");
+                                String id_istruttore = bf.readLine();
+                                System.out.println("Inserisci Nome istruttore --->");
+                                String nome = bf.readLine();
+                                gi.AssumiIstruttore(nome, id_istruttore);
                             } catch (IstruttoreGiaAssuntoException e) {
                                 System.out.println(e.getMessage());
                             } catch (Exception e) {
                                 System.out.println("OPS: qualcosa è andato storto!");
                             }
                             break;
+                    case 5:
+                            try{
+                            System.out.println("Scegli Corso A Cui Assegnare Istruttore");
+                            String id_corso = bf.readLine();
+                            
+                            gi.VisualizzaIstruttoriDisponibili();
+                            
+                            System.out.println("Scegli ID Istruttore Da Assegnare al corso: " + id_corso + " --->");
+                            String id_istruttore = bf.readLine();
+                            
+                            Istruttore is = gi.getIstruttore(id_istruttore);
+                            
+                            gc.AggiungiIstruttore(is, id_corso);
+                            
+                        }
+                        catch(IstruttoreGiaAssegnatoAlCorsoException e){System.out.println(e.getMessage());}
+                        catch(IstruttoreNonDisponibile e){System.out.println(e.getMessage());}    
+                        catch(Exception e){
+                        System.out.println("OPS: qualcosa è andato storto!");
+                        }
+                        break;
                     
                     case 10: // STAMPA TUTTO DEI CORSI (UTILITY)
                             gc.stampaTutto();     
