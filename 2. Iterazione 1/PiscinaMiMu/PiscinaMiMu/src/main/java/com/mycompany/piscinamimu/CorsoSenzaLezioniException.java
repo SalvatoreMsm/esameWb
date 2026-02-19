@@ -1,0 +1,15 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.mycompany.piscinamimu;
+
+/**
+ *
+ * @author pmilo
+ */
+public class CorsoSenzaLezioniException extends Exception{
+    public CorsoSenzaLezioniException(String idCorso) {
+        super("Il corso con id " + idCorso + " non contiene lezioni.");
+    }
+}
