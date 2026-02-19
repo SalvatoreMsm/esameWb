@@ -41,13 +41,16 @@ public class Istruttore {
     
     public void AssegnaCorso(Corso c) throws IstruttoreNonDisponibile{
     
-        if(!this.isDisponibile()){
-            System.out.println("L'allenatore ha raggiunto il numero massimo di corsi insegnabili");
-            return;
-        } //sostituire in questo punto con throw ed eccezione appositamente creata
+        if(!this.isDisponibile()) throw new IstruttoreNonDisponibile(this.getIdIstruttore());
         
         this.corsi_insegnati.put(c.getIdCorso(), c);
     
+    }
+    
+    public Corso getCorsoInsegnato(String id_corso) throws CorsoNonPresenteException{
+    	Corso c = this.corsi_insegnati.get(id_corso);
+        if(c == null) throw new CorsoNonPresenteException(id_corso);
+        return c;
     }
     
     @Override

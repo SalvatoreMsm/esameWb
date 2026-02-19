@@ -38,6 +38,10 @@ public class Corso {
         return elencoLezioni;
     }
     
+    public Map<String, Istruttore> getElencoIstruttori(){
+        return this.elencoIstruttori;
+    }
+    
     public void aggiungiLezione(String idLezione, String oraInizio, String oraFine) throws ProgrammazionePienaException, LezioneGiaPresenteException {
         
         Lezione l;

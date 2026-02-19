@@ -370,6 +370,7 @@ public class GestoreCorsi {
         String ora_fine;
         try{
             l=cercaLezione(id_corso, id_lezione);
+            if(l == null) throw new LezioneNonPresenteException(id_lezione);
 
             System.out.println("Inserire nuovo orario fine lezione --->");
             ora_fine = bf.readLine();
@@ -382,13 +383,19 @@ public class GestoreCorsi {
     
     }
     
-    public synchronized void AggiungiIstruttore(Istruttore is, String id_corso){
+    public synchronized void AggiungiIstruttore(Istruttore is, String id_corso) throws IstruttoreGiaAssegnatoAlCorsoException{
         try{
-            Corso c = this.elencoCorsi.get(id_corso);
+            Corso c = this.cercaCorso(id_corso);
+            if(c.getElencoIstruttori().containsKey(is.getIdIstruttore())) throw new IstruttoreGiaAssegnatoAlCorsoException(is.getIdIstruttore());
             c.AggiungiIstruttore(is);
-            is.AssegnaCorso(c);}catch(IstruttoreNonDisponibile e){System.out.println(e.getMessage());}
+            is.AssegnaCorso(c);
+            }
+            catch(CorsoNonPresenteException e){System.out.println(e.getMessage());}
+            catch(IstruttoreNonDisponibile e){System.out.println(e.getMessage());}
     
     }
+    
+    
     
     public synchronized void stampaTutto(){
         for(Corso c: elencoCorsi.values()){
