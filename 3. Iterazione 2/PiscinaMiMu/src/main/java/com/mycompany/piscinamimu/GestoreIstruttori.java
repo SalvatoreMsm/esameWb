@@ -18,7 +18,7 @@ public class GestoreIstruttori {
         this.elencoIstruttori = new HashMap<>();
     }
     
-    public synchronized void caricaIstruttori(String nomeFile) throws IstruttoreGiaAssuntoException{
+    public synchronized void caricaIstruttori(String nomeFile){
         
         try{
             
@@ -36,11 +36,12 @@ public class GestoreIstruttori {
             System.out.println("Numero istruttori caricati: " + elencoIstruttori.size());
             bf.close();
             
+        }catch(IstruttoreGiaAssuntoException e){
+            System.out.println(e.getMessage());
         }catch(IOException e){
             System.out.println("ERRORE IN FASE DI I/O");
             System.exit(-1);
         }
-        
     }
     
     public synchronized void AssumiIstruttore(String nome, String id_istruttore) throws IstruttoreGiaAssuntoException{

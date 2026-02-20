@@ -10,12 +10,20 @@ import java.io.*;
  */
 public class InterazioneUtente{
     
+    
+    private static final String FILE_CORSI = "elencoCorsi.txt";
+    private static final String FILE_LEZIONI = "elencoLezioni.txt";
+    private static final String FILE_ISTRUTTORI = "elencoIstruttori.txt";
+    private static final String FILE_CLIENTI = "elencoClienti.txt";
+    
     private GestoreCorsi gc;
     private GestoreIstruttori gi;
-    
-    public InterazioneUtente(GestoreCorsi gc, GestoreIstruttori gi){
+    private GestoreClienti gcl;
+      
+    public InterazioneUtente(GestoreCorsi gc, GestoreIstruttori gi, GestoreClienti gcl){
         this.gc = gc;
         this.gi = gi;
+        this.gcl = gcl;
     }
     
     public int menu(BufferedReader bf){
@@ -26,10 +34,13 @@ public class InterazioneUtente{
             System.out.println("3. Modifica un corso.");
             System.out.println("4. Assumi Istruttore");
             System.out.println("5. Assegna Istruttore Ad Un Corso");
+            System.out.println("6. Iscrizione Cliente alla Piscina");
             System.out.println("10. Stampa Corsi.");
             System.out.println("11. Stampa Istruttori Disponibili");
+            System.out.println("12. Stampa Clienti");
 
             System.out.println("20. EXIT.");
+            System.out.println("\n30. CARICA TUTTI DA FILE.");
             System.out.println("INSERIRE LA SCELTA --->");
             return Integer.parseInt(bf.readLine());
         }catch(IOException e){
@@ -248,27 +259,120 @@ public class InterazioneUtente{
             }
         } while (scelta != 20);
     }
+    private void gestisciAssumiIstruttore(BufferedReader bf){
+        try {
+            System.out.println("Inserisci ID istruttore --->");
+            String id_istruttore = bf.readLine();
+            System.out.println("Inserisci Nome istruttore --->");
+            String nome = bf.readLine();
+            gi.AssumiIstruttore(nome, id_istruttore);
+        } catch (IstruttoreGiaAssuntoException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println("OPS: qualcosa è andato storto!");
+        }
+    }
+    private void gestisciAssegnaIstruttore(BufferedReader bf){
+        try{
+            System.out.println("Scegli Corso A Cui Assegnare Istruttore");
+            String id_corso = bf.readLine();
 
+            gi.VisualizzaIstruttoriDisponibili();
+
+            System.out.println("Scegli ID Istruttore Da Assegnare al corso: " + id_corso + " --->");
+            String id_istruttore = bf.readLine();
+
+            Istruttore is = gi.getIstruttore(id_istruttore);
+
+            gc.AggiungiIstruttore(is, id_corso);
+
+        }catch(IstruttoreGiaAssegnatoAlCorsoException e){
+            System.out.println(e.getMessage());
+        }catch(IstruttoreNonDisponibile e){
+            System.out.println(e.getMessage());
+        }    
+        catch(Exception e){
+            System.out.println("OPS: qualcosa è andato storto!");
+        }
+    }
+
+    private void gestisciIscrizionePiscina(BufferedReader bf){
+        try {
+            String idCliente, nome, cognome;
+
+            System.out.print("Inserisci ID Cliente: ");
+            idCliente = bf.readLine();
+            System.out.print("Inserisci Nome Cliente: ");
+            nome = bf.readLine();
+            System.out.print("Inserisci Cognome Cliente: ");
+            cognome = bf.readLine();
+
+            Cliente nuovoCliente = new Cliente(nome, cognome, idCliente);
+            try {
+                gcl.aggiungiCliente(nuovoCliente);
+                System.out.println("Cliente aggiunto correttamente!");
+            } catch (ClienteGiaPresenteException e) {
+                System.out.println(e.getMessage());
+            }
+
+        } catch (IOException e) {
+            System.out.println("OPS: errore in lettura input!");
+        }
+    }
+    /* Se si vogliono inserire i nomi dei file manualmente
+    
+    private void caricaDaFile(){
+            BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+            try{
+                String nomeFileCorsi, nomeFileLezioni, nomeFileIstruttori, nomeFileClienti;
+
+                System.out.print("Nome file corsi: ");
+                nomeFileCorsi = bf.readLine();
+                gc.caricaCorsi(nomeFileCorsi);
+
+                System.out.print("Nome file lezioni: ");
+                nomeFileLezioni = bf.readLine();
+                gc.caricaLezioni(nomeFileLezioni);
+
+                System.out.print("Nome file Istruttori: ");
+                nomeFileIstruttori = bf.readLine();
+                gi.caricaIstruttori(nomeFileIstruttori);
+                
+                System.out.print("Nome file Clienti: ");
+                nomeFileClienti = bf.readLine();
+                gcl.caricaClienti(nomeFileClienti);
+                
+            }catch (IOException e) {
+                System.out.println("ERRORE IN FASE DI I/O nel caricamento da file");
+                System.exit(-1);
+            }
+
+    }
+    */
+    
+    private void caricaDaFile() {
+        try {
+            gc.caricaCorsi(FILE_CORSI);
+            gc.caricaLezioni(FILE_LEZIONI);
+            gi.caricaIstruttori(FILE_ISTRUTTORI);
+            gcl.caricaClienti(FILE_CLIENTI);
+
+            System.out.println("Caricamento completato!");
+
+        } catch (Exception e) {
+            System.out.println("ERRORE IN FASE DEL CARICAMENTO DA FILE");
+            System.exit(-1);
+        }
+    }
+    
+    
+    
     
     
     public void avvia() {
         BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
-        String nomeFileCorsi, nomeFileLezioni;
         try {
-            System.out.print("Nome file corsi: ");
-            nomeFileCorsi = bf.readLine();
-            gc.caricaCorsi(nomeFileCorsi);
-
-            System.out.print("Nome file lezioni: ");
-            nomeFileLezioni = bf.readLine();
-            gc.caricaLezioni(nomeFileLezioni);
             
-            System.out.print("Nome file Istruttori: ");
-            String nomeFileIstruttori = bf.readLine();
-            try{
-            gi.caricaIstruttori(nomeFileIstruttori);
-            }catch(IstruttoreGiaAssuntoException e){System.out.println(e.getMessage());}
-
             int scelta;
             do {
                 scelta = menu(bf); 
@@ -286,45 +390,26 @@ public class InterazioneUtente{
                             gestisciModificaCorso(bf);       
                             break;
                     case 4: // ASSUMI ISTRUTTORE                     
-                            try {
-                                System.out.println("Inserisci ID istruttore --->");
-                                String id_istruttore = bf.readLine();
-                                System.out.println("Inserisci Nome istruttore --->");
-                                String nome = bf.readLine();
-                                gi.AssumiIstruttore(nome, id_istruttore);
-                            } catch (IstruttoreGiaAssuntoException e) {
-                                System.out.println(e.getMessage());
-                            } catch (Exception e) {
-                                System.out.println("OPS: qualcosa è andato storto!");
-                            }
+                            gestisciAssumiIstruttore(bf);
                             break;
-                    case 5:
-                            try{
-                            System.out.println("Scegli Corso A Cui Assegnare Istruttore");
-                            String id_corso = bf.readLine();
-                            
-                            gi.VisualizzaIstruttoriDisponibili();
-                            
-                            System.out.println("Scegli ID Istruttore Da Assegnare al corso: " + id_corso + " --->");
-                            String id_istruttore = bf.readLine();
-                            
-                            Istruttore is = gi.getIstruttore(id_istruttore);
-                            
-                            gc.AggiungiIstruttore(is, id_corso);
-                            
-                        }
-                        catch(IstruttoreGiaAssegnatoAlCorsoException e){System.out.println(e.getMessage());}
-                        catch(IstruttoreNonDisponibile e){System.out.println(e.getMessage());}    
-                        catch(Exception e){
-                        System.out.println("OPS: qualcosa è andato storto!");
-                        }
-                        break;
+                    case 5: // ASSEGNA ISTRUTTORE
+                            gestisciAssegnaIstruttore(bf);
+                            break;
+                        
+                    case 6: gestisciIscrizionePiscina(bf);
+                            break;
                     
                     case 10: // STAMPA TUTTO DEI CORSI (UTILITY)
                             gc.stampaTutto();     
                             break;
                     case 11: // STAMPA TUTTO DEGLI ISTRUTTORI (UTILITY)
                             gi.StampaTutto();               
+                            break;
+                    case 12: // STAMPA TUTTO DEI CLIENTI (UTILITY)
+                            gcl.stampaTuttoClienti();               
+                            break;
+                    case 30: // CARICA DA FILE (Al momento carica tutti i file, potrei implementare un menu per far caricare solo quelli che si vogliono)
+                            caricaDaFile();
                             break;
                 }
             } while (scelta != 20);

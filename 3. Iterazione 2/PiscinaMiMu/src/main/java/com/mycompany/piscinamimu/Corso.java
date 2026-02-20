@@ -92,29 +92,29 @@ public class Corso {
     @Override
     public String toString() {
         String s;
-    s = "ID Corso: " + idCorso + "\n" +
-               descrizione + "\n";
+        s = "ID Corso: " + idCorso + "\n" +
+                   descrizione + "\n";
 
-    if (elencoLezioni != null && !elencoLezioni.isEmpty()) {
-        s += "Lezioni:\n";
-        for (Lezione l : elencoLezioni.values()) {
-            s += l + "\n"; 
+        if (elencoLezioni != null && !elencoLezioni.isEmpty()) {
+            s += "Lezioni:\n";
+            for (Lezione l : elencoLezioni.values()) {
+                s += l + "\n"; 
+            }
+        } else {
+            s += "Nessuna lezione presente.\n";
         }
-    } else {
-        s += "Nessuna lezione presente.\n";
-    }
-    
-    if(elencoIstruttori != null && !elencoIstruttori.isEmpty()){
-    
-        s += "Istruttori\n";
-        for(Istruttore is : elencoIstruttori.values()){
-            s += is + "\n";
-        }
-    
-    }
-    else s += "Nessun istruttore presente";
 
-    return s;
+        if(elencoIstruttori != null && !elencoIstruttori.isEmpty()){
+
+            s += "Istruttori\n";
+            for(Istruttore is : elencoIstruttori.values()){
+                s += is + "\n";
+            }
+
+        }
+        else s += "Nessun istruttore presente";
+
+        return s;
     }
 
 
