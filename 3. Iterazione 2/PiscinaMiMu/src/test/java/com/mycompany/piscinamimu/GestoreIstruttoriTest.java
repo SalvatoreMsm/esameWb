@@ -7,6 +7,7 @@ package com.mycompany.piscinamimu;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import java.io.*;
+import java.util.*;
 
 /**
  *
@@ -45,7 +46,7 @@ public class GestoreIstruttoriTest {
     }
     
     @Test
-    void stampaTutto_nonLanciaEccezioni() throws Exception {
+    public void stampaTutto_nonLanciaEccezioni() throws Exception {
         
         String id_istruttore = "IS1";
         String nome = "Piero";
@@ -53,6 +54,28 @@ public class GestoreIstruttoriTest {
         assertDoesNotThrow(() -> g.StampaTutto());
         
     }
-    
+    @Test
+    public void getIstruttore_not_ok() {
+        assertThrows(IstruttoreNonDisponibile.class, () -> g.getIstruttore("NON_ESISTE"));
+    }
+    @Test
+    public void visualizzaIstruttoriDisponibili_ok() throws Exception {
+        g.AssumiIstruttore("Piero", "IS1");
+        g.AssumiIstruttore("Franco", "IS2");
+
+        // Recupera i2 dal gestore
+        Istruttore i2 = g.getIstruttore("IS2");
+
+        // Rendi i2 non disponibile
+        DescrizioneCorso cd = new DescrizioneCorso("Nuoto", "Adulti", 10, 5, 0);
+        i2.AssegnaCorso(new Corso("C1", cd));
+        i2.AssegnaCorso(new Corso("C2", cd));
+        i2.AssegnaCorso(new Corso("C3", cd));
+
+        Map<String, Istruttore> disponibili = g.VisualizzaIstruttoriDisponibili();
+
+        assertTrue(disponibili.containsKey("IS1"));
+        assertFalse(disponibili.containsKey("IS2"));
+    }
     
 }

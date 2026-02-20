@@ -22,6 +22,10 @@ public class Istruttore {
         this.corsi_insegnati = new HashMap<>();
     
     };
+
+    public String getNome() {
+        return nome;
+    }
     
     public String getIdIstruttore(){
         return this.id_istruttore;

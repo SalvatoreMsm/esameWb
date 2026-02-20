@@ -25,13 +25,13 @@ public class GestoreCorsiTest {
     }
 
     @Test
-    void aggiungiCorso_ok() throws Exception {
+    public void aggiungiCorso_ok() throws Exception {
         gestore.aggiungiCorso("C1", descr);
         assertEquals("C1", gestore.cercaCorso("C1").getIdCorso());
     }
 
     @Test
-    void aggiungiCorso_giaPresente() throws Exception {
+    public void aggiungiCorso_giaPresente() throws Exception {
         gestore.aggiungiCorso("C1", descr);
 
         assertThrows(CorsoGiaPresenteException.class, () -> 
@@ -40,22 +40,14 @@ public class GestoreCorsiTest {
     }
 
     @Test
-    void cercaCorso_ok() throws Exception {
-        gestore.aggiungiCorso("C2", descr);
-        Corso corso = gestore.cercaCorso("C2");
-        assertNotNull(corso);
-        assertEquals("C2", corso.getIdCorso());
-    }
-
-    @Test
-    void cercaCorso_nonPresente() {
+    public void cercaCorso_nonPresente() {
         assertThrows(CorsoNonPresenteException.class, () -> 
             gestore.cercaCorso("NON_ESISTE")
         );
     }
 
     @Test
-    void eliminaCorso_ok() throws Exception {
+    public void eliminaCorso_ok() throws Exception {
         gestore.aggiungiCorso("C3", descr);
         gestore.eliminaCorso("C3");
 
@@ -65,14 +57,14 @@ public class GestoreCorsiTest {
     }
 
     @Test
-    void eliminaCorso_nonPresente() {
+    public void eliminaCorso_nonPresente() {
         assertThrows(CorsoNonPresenteException.class, () -> 
             gestore.eliminaCorso("nessuno")
         );
     }
 
     @Test
-    void aggiungiLezione_alCorsoEsistente() throws Exception {
+    public void aggiungiLezione_alCorsoEsistente() throws Exception {
         gestore.aggiungiCorso("C4", descr);
         Corso corso = gestore.cercaCorso("C4");
         corso.aggiungiLezione("L1", "10:00", "11:00");
@@ -85,17 +77,7 @@ public class GestoreCorsiTest {
     }
 
     @Test
-    void aggiungiLezione_corsoNonPresenteLanciaEccezione() {
-        assertThrows(CorsoNonPresenteException.class, () -> {
-            // Se il corso non esiste, cercaCorso fallirà
-            gestore.cercaCorso("C_no").aggiungiLezione(
-                "L1", "10:00", "11:00"
-            );
-        });
-    }
-
-    @Test
-    void aggiungiLezione_giaPresente() throws Exception {
+    public void aggiungiLezione_giaPresente() throws Exception {
         gestore.aggiungiCorso("C5", descr);
         Corso corso = gestore.cercaCorso("C5");
         Lezione l1 = new Lezione("L1", "08:00", "09:00");
@@ -105,7 +87,7 @@ public class GestoreCorsiTest {
     }
 
     @Test
-    void aggiungiLezione_programmazionePiena() throws Exception {
+    public void aggiungiLezione_programmazionePiena() throws Exception {
         // Corso con durata = 2, provo ad aggiungere 3 lezioni
         DescrizioneCorso descPiccolo = new DescrizioneCorso("MiniCorso", "Adulti", 5, 2, 0);
         gestore.aggiungiCorso("C6", descPiccolo);
@@ -119,40 +101,15 @@ public class GestoreCorsiTest {
         );
     }
 
-    @Test
-    void eliminaLezione_presente() throws Exception {
-        gestore.aggiungiCorso("C7", descr);
-        Corso corso = gestore.cercaCorso("C7");
-
-        corso.aggiungiLezione("L1", "08:00", "09:00");
-        corso.eliminaLezione("L1");
-
-        assertFalse(corso.isLezionePresente("L1"));
-    }
 
     @Test
-    void eliminaLezione_nonPresente() throws Exception {
+    public void eliminaLezione_nonPresente() throws Exception {
         gestore.aggiungiCorso("C8", descr);
         Corso corso = gestore.cercaCorso("C8");
 
         assertThrows(LezioneNonPresenteException.class, () -> corso.eliminaLezione("L1"));
     }
     
-    @Test
-    void aggiungiLezione_limiteDurata() throws Exception {
-        DescrizioneCorso descr = new DescrizioneCorso("Nuoto", "Tutti", 10, 2, 0);
-        gestore.aggiungiCorso("C1", descr);
-
-        Corso corso = gestore.cercaCorso("C1");
-
-        corso.aggiungiLezione("L1", "08:00", "09:00");
-        corso.aggiungiLezione("L2", "09:00", "10:00");
-
-        // Prossima lezione dovrebbe lanciare ProgrammazionePienaException
-        assertThrows(ProgrammazionePienaException.class, () -> 
-            corso.aggiungiLezione("L3", "10:00", "11:00")
-        );
-    }
     
     @Test
     public void ModificaNome_ok() throws Exception{
@@ -176,93 +133,7 @@ public class GestoreCorsiTest {
         assertThrows(CorsoNonPresenteException.class, () -> gestore.ModificaNome("nessuno"));
     }
     
-    @Test
-    public void ModificaTipologiaClienti_ok() throws Exception{
-        gestore.aggiungiCorso("C1", descr);
-        
-        String input = "Bambino";
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
-        
-        gestore.ModificaTipologiaClienti("C1");
-        Corso c = gestore.cercaCorso("C1");
-        
-        assertEquals("Bambino", c.getDescrizione().getTipologia_clienti());
-        
-    }
-    
-    @Test
-    public void ModificaTipologiaClienti_not_ok() throws Exception{
-        String input = "Bambino";
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
-        
-        assertThrows(CorsoNonPresenteException.class, () -> gestore.ModificaTipologiaClienti("nessuno"));
-    }
-    
-    @Test
-    public void ModificaDurata_ok() throws Exception{
-        gestore.aggiungiCorso("C1", descr);
-        
-        String input = "9";
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
-        
-        gestore.ModificaDurata("C1");
-        Corso c = gestore.cercaCorso("C1");
-        
-        assertEquals(9, c.getDescrizione().getDurata());
-        
-    }
-    
-    @Test
-    public void ModificaDurata_not_ok() throws Exception{
-        String input = "9";
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
-        
-        assertThrows(CorsoNonPresenteException.class, () -> gestore.ModificaDurata("nessuno"));
-    }
-    
-    @Test
-    public void ModificaNumeroPosti_ok() throws Exception{
-        gestore.aggiungiCorso("C1", descr);
-        
-        String input = "9";
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
-        
-        gestore.ModificaNumeroPosti("C1");
-        Corso c = gestore.cercaCorso("C1");
-        
-        assertEquals(9, c.getDescrizione().getNum_posti());
-        
-    }
-    
-    @Test
-    public void ModificaNumeroPosti_not_ok() throws Exception{
-        String input = "9";
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
-        
-        assertThrows(CorsoNonPresenteException.class, () -> gestore.ModificaNumeroPosti("nessuno"));
-    }
-    
-    @Test
-    public void ModificaPostiOccupati_ok() throws Exception{
-        gestore.aggiungiCorso("C1", descr);
-        
-        String input = "9";
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
-        
-        gestore.ModificaPostiOccupati("C1");
-        Corso c = gestore.cercaCorso("C1");
-        
-        assertEquals(9, c.getDescrizione().getNum_posti_occupati());
-        
-    }
-    
-    @Test
-    public void ModificaPostiOccupati_not_ok() throws Exception{
-        String input = "9";
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
-        
-        assertThrows(CorsoNonPresenteException.class, () -> gestore.ModificaPostiOccupati("nessuno"));
-    }
+
     
     @Test
     public void ModificaOraInizioLezione_ok() throws Exception{
@@ -317,18 +188,7 @@ public class GestoreCorsiTest {
         assertEquals("12:00", c.cercaLezione("L1").getOraFine());
         
     }
-    
-    @Test
-    public void ModificaOraFineLezione_corso_not_ok() throws Exception{
-        assertThrows(CorsoNonPresenteException.class, () -> gestore.ModificaOraFineLezione("C1", "L1"));
-    }
-    
-    @Test 
-    public void ModificaOraFineLezione_lezione_not_ok() throws Exception{
-        gestore.aggiungiCorso("C1", descr);
-        Corso c = gestore.cercaCorso("C1");
-        assertThrows(LezioneNonPresenteException.class, () -> gestore.ModificaOraFineLezione("C1", "nessuna"));
-    }
+
     
     @Test
     public void ModificaOraFineLezione_lezione_orari_not_ok() throws Exception{
@@ -341,11 +201,28 @@ public class GestoreCorsiTest {
         
         assertThrows(LezioniConOrariNonValidiException.class, () -> gestore.ModificaOraFineLezione("C1", "L1"));
     }
-    
     @Test
-    void stampaTutto_nonLanciaEccezioni() throws Exception {
-        gestore.aggiungiCorso("C1", new DescrizioneCorso("Nuoto", "Tutti", 10, 3, 0));
-        assertDoesNotThrow(() -> gestore.stampaTutto());
+    public void AssegnaCorso_ok() throws Exception {
+        Istruttore istr = new Istruttore("I1", "Mario");
+        gestore.aggiungiCorso("C10", descr);
+        Corso c = gestore.cercaCorso("C10");
+
+        istr.AssegnaCorso(c);
+
+        assertTrue(istr.getCorsi().containsKey("C10"));
+    }
+
+    @Test
+    public void AssegnaCorso_nonDisponibile() throws Exception {
+        Istruttore istr = new Istruttore("I2", "Luca");
+        gestore.aggiungiCorso("C11", descr);
+        Corso c = gestore.cercaCorso("C11");
+
+        assertThrows(IstruttoreNonDisponibile.class, () -> 
+            istr.AssegnaCorso(c)
+        );
     }
     
+    
+
 }

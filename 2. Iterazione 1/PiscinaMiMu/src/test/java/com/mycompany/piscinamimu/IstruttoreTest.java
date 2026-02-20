@@ -42,5 +42,13 @@ public class IstruttoreTest {
         String s = is.toString();
         assertTrue(s.contains(("Nome: Franco ID_istruttore: IS1")));
     }
+    @Test
+    public void assegnaCorso_ok() throws Exception {
+        Corso c = new Corso("C1", cd);
+
+        is.AssegnaCorso(c);
+
+        assertEquals("C1", is.getCorsoInsegnato("C1").getIdCorso());
+    }
     
 }
