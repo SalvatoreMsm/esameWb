@@ -9,24 +9,20 @@ import java.util.*;
  *
  * @author pmilo
  */
-public class Vasca {
+public abstract class Vasca {
     
-    private String tipo_vasca;
     private String id_vasca;
     private Map<String, Corsia> elenco_corsie;
 
     // Costruttore
 
     
-    public Vasca(String tipo_vasca, String id_vasca) {
-        this.tipo_vasca = tipo_vasca;
+    public Vasca(String id_vasca) {
         this.id_vasca = id_vasca;
         elenco_corsie = new HashMap<>();
     }
     
-    public String getTipoVasca(){
-        return this.tipo_vasca;
-    }
+
     
     public String getIdVasca(){
         return this.id_vasca;
@@ -81,8 +77,7 @@ public class Vasca {
         
     @Override
     public String toString() {
-        return "Vasca [ID=" + id_vasca +
-               ", Tipo=" + tipo_vasca + "]";
+        return "Vasca [ID=" + id_vasca;
     }
     
     

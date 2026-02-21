@@ -26,8 +26,15 @@ public class GestoreVasche {
     }
     
     public void aggiungiVasca(String tipo_vasca, String id_vasca) throws VascaGiaPresenteException{
-        Vasca v = new Vasca(tipo_vasca, id_vasca);
+        Vasca v = null;
+        //Vasca v = new Vasca(id_vasca);
         if(this.elencoVasche.containsKey(id_vasca)) throw new VascaGiaPresenteException(id_vasca);
+        if(tipo_vasca.equalsIgnoreCase("Donne"))v = new VascaDonne(id_vasca);
+        if(tipo_vasca.equalsIgnoreCase("Uomini"))v = new VascaUomini(id_vasca);
+        if(tipo_vasca.equalsIgnoreCase("Bambini"))v = new VascaBambini(id_vasca);
+        if(tipo_vasca.equalsIgnoreCase("Mista"))v = new VascaMista(id_vasca);
+        if(tipo_vasca.equalsIgnoreCase("Riabilitazione"))v = new VascaRiabilitazione(id_vasca);
+        
         this.elencoVasche.put(id_vasca, v);
     }
     
@@ -125,10 +132,45 @@ public class GestoreVasche {
     }
     public void mostraVaschePerTipologia(String tipo) {
         boolean trovato = false;
+        String donne = "Donne";
+        String uomini = "Uomini";
+        String bambini = "Bambini";
+        String mista = "Mista";
+        String Riabilitazione = "Riabilitazione";
         for (Vasca v : elencoVasche.values()) {
-            if (v.getTipoVasca().equalsIgnoreCase(tipo)) {
+            /*if (v.getTipoVasca().equalsIgnoreCase(tipo)) {
                 v.stampaDettagli();
                 trovato = true;
+            }*/
+            if(donne.equalsIgnoreCase(tipo)){
+                if(v instanceof VascaDonne){
+                    v.stampaDettagli();
+                    trovato = true;
+                }
+            }
+            if(uomini.equalsIgnoreCase(tipo)){
+                if(v instanceof VascaUomini){
+                    v.stampaDettagli();
+                    trovato = true;
+                }
+            }
+            if(bambini.equalsIgnoreCase(tipo)){
+                if(v instanceof VascaBambini){
+                    v.stampaDettagli();
+                    trovato = true;
+                }
+            }
+            if(mista.equalsIgnoreCase(tipo)){
+                if(v instanceof VascaBambini){
+                    v.stampaDettagli();
+                    trovato = true;
+                }
+            }
+            if(Riabilitazione.equalsIgnoreCase(tipo)){
+                if(v instanceof VascaRiabilitazione){
+                    v.stampaDettagli();
+                    trovato = true;
+                }
             }
         }
         if (!trovato) {
