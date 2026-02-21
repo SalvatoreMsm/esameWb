@@ -13,6 +13,7 @@ public class Lezione {
     private String idLezione;
     private String oraInizio;
     private String oraFine;
+    private Corsia cr;
 
     // Costruttore
 
@@ -21,6 +22,7 @@ public class Lezione {
         this.idLezione = idLezione;
         this.oraInizio = ora_inizio;
         this.oraFine = ora_fine;
+        this.cr = null;
     }
 
     public String getIdLezione() {
@@ -35,6 +37,17 @@ public class Lezione {
         this.oraFine = ora_fine;
     }
     
+    public void setCorsia(Corsia cr){
+        this.cr = cr;
+    }
+    
+    public void addCorsia(Corsia cr) throws CorsiaGiaPresenteException{
+        if(cr == null) throw new CorsiaGiaPresenteException(cr.getNumCorsia());
+        if(cr == this.cr) throw new CorsiaGiaPresenteException(cr.getNumCorsia());
+        this.setCorsia(cr);
+    }
+    
+    
     public String getOraInizio(){
         return this.oraInizio;
     }
@@ -42,6 +55,16 @@ public class Lezione {
     public String getOraFine(){
         return this.oraFine;
     }
+    
+    public Corsia getCorsia(){
+        return this.cr;
+    }
+    
+    public void RemoveCorsia(){
+        this.cr = null;
+        System.out.println("Rimossa corsia: "+cr);
+    }
+    
     
     public static boolean checkValidTimeStatic(String ora_inizio, String ora_fine) {
 
@@ -57,7 +80,8 @@ public class Lezione {
     
     @Override
     public String toString() {
-        return idLezione + " " + oraInizio + "-" + oraFine;
+        if(cr != null) return idLezione + " " + oraInizio + "-" + oraFine + "-" + cr;
+        else return idLezione + " " + oraInizio + "-" + oraFine;
     }
 
     

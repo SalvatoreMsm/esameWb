@@ -395,11 +395,27 @@ public class GestoreCorsi {
     
     }
     
+    public synchronized void AggiungiCorsia(String id_corso, String id_lezione, Corsia cr) throws CorsoNonPresenteException, LezioneNonPresenteException,
+            CorsiaGiaPresenteException{
+        Corso c = this.cercaCorso(id_corso);
+        Lezione l = c.cercaLezione(id_lezione);
+        cr.addLezione(l);
+        l.addCorsia(cr);
+        
+    }
     
-    
+        
     public synchronized void stampaTutto(){
         for(Corso c: elencoCorsi.values()){
             System.out.println(c);
+        }
+    }
+    
+    public synchronized void stampaLezioni(){
+        for(Corso c : this.elencoCorsi.values()){
+            for(Lezione l : c.getElencoLezioni().values()){
+                System.out.println(l);
+            }
         }
     }
     

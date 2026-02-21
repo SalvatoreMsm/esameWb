@@ -15,15 +15,19 @@ public class InterazioneUtente{
     private static final String FILE_LEZIONI = "elencoLezioni.txt";
     private static final String FILE_ISTRUTTORI = "elencoIstruttori.txt";
     private static final String FILE_CLIENTI = "elencoClienti.txt";
+    private static final String FILE_VASCHE = "elencoVasche.txt";
+    private static final String FILE_CORSIE = "elencoCorsie.txt";
     
     private GestoreCorsi gc;
     private GestoreIstruttori gi;
     private GestoreClienti gcl;
+    private GestoreVasche gv;
       
-    public InterazioneUtente(GestoreCorsi gc, GestoreIstruttori gi, GestoreClienti gcl){
+    public InterazioneUtente(GestoreCorsi gc, GestoreIstruttori gi, GestoreClienti gcl,  GestoreVasche gv){
         this.gc = gc;
         this.gi = gi;
         this.gcl = gcl;
+        this.gv = gv;
     }
     
     public int menu(BufferedReader bf){
@@ -35,9 +39,15 @@ public class InterazioneUtente{
             System.out.println("4. Assumi Istruttore");
             System.out.println("5. Assegna Istruttore Ad Un Corso");
             System.out.println("6. Iscrizione Cliente alla Piscina");
-            System.out.println("10. Stampa Corsi.");
-            System.out.println("11. Stampa Istruttori Disponibili");
-            System.out.println("12. Stampa Clienti");
+            System.out.println("7. Inserisci Nuova Vasca");
+            System.out.println("8. Associa una Lezione ad una Corsia");
+            System.out.println("9. Rimuovi Corsia da una Vasca");
+            System.out.println("10. Aggiungi Corsia ad una Vasca");
+            System.out.println("11. Stampa Corsi.");
+            System.out.println("12. Stampa Istruttori Disponibili");
+            System.out.println("13. Stampa Clienti");
+            System.out.println("14. Stampa Vasche");
+            System.out.println("15. Stampa Lezioni");
 
             System.out.println("20. EXIT.");
             System.out.println("\n30. CARICA TUTTI DA FILE.");
@@ -356,10 +366,15 @@ public class InterazioneUtente{
             gc.caricaLezioni(FILE_LEZIONI);
             gi.caricaIstruttori(FILE_ISTRUTTORI);
             gcl.caricaClienti(FILE_CLIENTI);
+            gv.CaricaVasche(FILE_VASCHE);
+            gv.CaricaCorsie(FILE_CORSIE);
 
             System.out.println("Caricamento completato!");
 
-        } catch (Exception e) {
+        }
+        catch(VascaNonPresenteException e){System.out.println(e);}
+        catch(CorsiaGiaPresenteException e){System.out.println(e);}
+        catch (Exception e) {
             System.out.println("ERRORE IN FASE DEL CARICAMENTO DA FILE");
             System.exit(-1);
         }
@@ -398,15 +413,79 @@ public class InterazioneUtente{
                         
                     case 6: gestisciIscrizionePiscina(bf);
                             break;
-                    
-                    case 10: // STAMPA TUTTO DEI CORSI (UTILITY)
+                    case 7:
+                            try{
+                            System.out.println("Inserisci id nuova vasca --->");
+                            String id_vasca = bf.readLine();
+                            System.out.println("Inserisci tipologia nuova vasca --->");
+                            String tipologia_vasca = bf.readLine();
+                            
+                            gv.aggiungiVasca(tipologia_vasca, id_vasca);
+                            }catch(VascaGiaPresenteException e){System.out.println(e);}
+                            break;
+                    case 8:
+                            try{
+                            System.out.println("Inserisci id corso --->");
+                            String id_corso = bf.readLine();
+                            System.out.println("Inserisci id lezione --->");
+                            String id_lezione = bf.readLine();
+                            System.out.println("Inserisci id corsia --->");
+                            String id_corsia = bf.readLine();
+                            
+                            Corsia cr = gv.CercaCorsia(id_corsia);
+                            gc.AggiungiCorsia(id_corso, id_lezione, cr);
+                            
+                            }
+                            catch(CorsoNonPresenteException e){System.out.println(e);}
+                            catch(LezioneNonPresenteException e){System.out.println(e);}
+                            catch(CorsiaGiaPresenteException e){System.out.println(e);}
+                            catch(CorsiaNonEsistenteException e){System.out.println(e);}
+                            break;
+                    case 9:
+                            try{
+                                System.out.println("Inserisci Id Vasca da cui rimuovere la corsia --->");
+                                String id_vasca = bf.readLine();
+                                
+                                System.out.println("Inserisci Id Corsia da rimuovere --->");
+                                String id_corsia = bf.readLine();
+                                
+
+                                gv.RemoveCorsiaToVasca(id_vasca, id_corsia);
+                                
+                                
+                            }
+                            catch(VascaNonPresenteException e){System.out.println(e);}
+                            catch(CorsiaNonPresenteNellaVascaException e){System.out.println(e);}
+                            break;
+                    case 10:
+                            try{
+                            System.out.println("Inserire Id della vasca a cui aggiungere corsia --->");
+                            String id_vasca = bf.readLine();
+                            System.out.println("Inserire nuova corsia --->");
+                            String id_corsia = bf.readLine();
+                            
+                            Corsia cr = new Corsia(Integer.parseInt(id_corsia));
+                            gv.AssegnaCorsiaToVasca(id_vasca, cr);
+                            }
+                            catch(CorsiaGiaEsistenteException e){System.out.println(e);}
+                            catch(VascaNonPresenteException e){System.out.println(e);}
+                            catch(CorsiaGiaPresenteException e){System.out.println(e);}
+                            break;
+                            
+                    case 11: // STAMPA TUTTO DEI CORSI (UTILITY)
                             gc.stampaTutto();     
                             break;
-                    case 11: // STAMPA TUTTO DEGLI ISTRUTTORI (UTILITY)
+                    case 12: // STAMPA TUTTO DEGLI ISTRUTTORI (UTILITY)
                             gi.StampaTutto();               
                             break;
-                    case 12: // STAMPA TUTTO DEI CLIENTI (UTILITY)
+                    case 13: // STAMPA TUTTO DEI CLIENTI (UTILITY)
                             gcl.stampaTuttoClienti();               
+                            break;
+                    case 14: // STAMPA TUTTO DELLE VASCHE (UTILITY)
+                            gv.StampaTutto();               
+                            break;
+                    case 15: //STAMPA TUTTO DELLE LEZIONI (UTILITY)
+                            gc.stampaLezioni();
                             break;
                     case 30: // CARICA DA FILE (Al momento carica tutti i file, potrei implementare un menu per far caricare solo quelli che si vogliono)
                             caricaDaFile();

@@ -18,8 +18,9 @@ public class PiscinaMiMu {
         GestoreCorsi gc = new GestoreCorsi();
         GestoreIstruttori gi = new GestoreIstruttori();
         GestoreClienti gcl = new GestoreClienti();
+        GestoreVasche gv = new GestoreVasche();
         
-        InterazioneUtente ti = new InterazioneUtente(gc, gi, gcl);
+        InterazioneUtente ti = new InterazioneUtente(gc, gi, gcl, gv);
 
         ti.avvia();
     }
