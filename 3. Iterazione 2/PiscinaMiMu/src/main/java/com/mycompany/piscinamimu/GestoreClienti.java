@@ -28,13 +28,17 @@ public class GestoreClienti {
     public synchronized void caricaClienti(String nomeFile) {
         try (BufferedReader bf = new BufferedReader(new FileReader(nomeFile))) {
 
-            String idCliente, nome, cognome;
+            String idCliente, nome, cognome, tipologia;
+            Cliente.TipologiaCliente tipo;
 
             while ((idCliente = bf.readLine()) != null) {
                 nome = bf.readLine();
                 cognome = bf.readLine();
-
-                Cliente cliente = new Cliente(nome, cognome, idCliente);
+                
+                tipologia = bf.readLine();
+                tipo = Cliente.TipologiaCliente.valueOf(tipologia);
+                
+                Cliente cliente = new Cliente(nome, cognome, idCliente, tipo);
 
                 try {
                     aggiungiCliente(cliente);
@@ -51,31 +55,32 @@ public class GestoreClienti {
             System.exit(-1);
         }
     }
-
-    public synchronized void stampaTuttoClienti() {
-        for (Cliente cliente : elencoClienti.values()) {
-            System.out.println("Cliente: " + cliente); // toString() di Cliente
-            if (cliente.numCorsi() == 0) {
-                System.out.println("NON iscritto a nessun corso");
-            } else {
-                System.out.println("  Corsi iscritti:");
-                for (Corso corso : cliente.getCorsiIscritti().values()) {
-                    // Stampa solo ID e nome del corso (nome dentro DescrizioneCorso)
-                    System.out.println("    - ID Corso: " + corso.getIdCorso() +
-                                       ", Nome: " + corso.getDescrizione().getNome());
-                }
-            
-            }
-            System.out.println("\n");
+    
+    public synchronized void mostraTuttiClienti() {
+        for (Cliente c : elencoClienti.values()) {
+            c.stampaDettagli();
         }
     }
-
+    public void mostraCliente(String idCliente) {
+        Cliente c = elencoClienti.get(idCliente);
+        if(c == null) {
+            System.out.println("Cliente non trovato.");
+            return;
+        }
+        c.stampaDettagli();
+    }
+    public void mostraClientiPerTipologia(Cliente.TipologiaCliente tipologia) {
+        boolean trovato = false;
+        for (Cliente c : elencoClienti.values()) {
+            if (c.getTipologia() == tipologia) {
+                c.stampaDettagli();
+                trovato = true;
+            }
+        }
+        if (!trovato) {
+            System.out.println("Nessun cliente trovato per la tipologia " + tipologia);
+        }
+    }
     
-    public Cliente getCliente(String idCliente) {
-        return elencoClienti.get(idCliente);
-    }
-
-    public Collection<Cliente> getElencoClienti() {
-        return elencoClienti.values();
-    }
+    
 }

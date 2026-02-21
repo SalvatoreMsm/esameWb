@@ -8,8 +8,8 @@ package com.mycompany.piscinamimu;
  *
  * @author salvatore
  */
-public class CorsiaNonEsistenteException extends Exception{
-    public CorsiaNonEsistenteException(String id_corsia){
-        super("Corsia: "+id_corsia+" non esistente");
+public class VascaMista extends Vasca{
+    public VascaMista(String id_corso){
+        super(id_corso);
     }
 }

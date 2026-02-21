@@ -51,7 +51,7 @@ public class GestoreIstruttoriTest {
         String id_istruttore = "IS1";
         String nome = "Piero";
         g.AssumiIstruttore(nome, id_istruttore);
-        assertDoesNotThrow(() -> g.StampaTutto());
+        assertDoesNotThrow(() -> g.mostraTuttiIstruttori());
         
     }
     @Test
@@ -72,7 +72,7 @@ public class GestoreIstruttoriTest {
         i2.AssegnaCorso(new Corso("C2", cd));
         i2.AssegnaCorso(new Corso("C3", cd));
 
-        Map<String, Istruttore> disponibili = g.VisualizzaIstruttoriDisponibili();
+        Map<String, Istruttore> disponibili = g.mostraIstruttoriDisponibili();
 
         assertTrue(disponibili.containsKey("IS1"));
         assertFalse(disponibili.containsKey("IS2"));

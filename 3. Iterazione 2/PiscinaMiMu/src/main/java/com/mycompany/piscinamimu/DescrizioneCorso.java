@@ -12,18 +12,18 @@ public class DescrizioneCorso {
  
     private String nome;
     private String tipologia_clienti;
-    private int num_posti;
+    private int numPosti;
     private int durata;
-    private int num_posti_occupati;
+    private int numPostiOccupati;
 
     // Costruttore
     
     public DescrizioneCorso(String nome, String tipologia_clienti, int num_posti, int durata, int num_posti_occupati) {
         this.nome = nome;
         this.tipologia_clienti = tipologia_clienti;
-        this.num_posti = num_posti;
+        this.numPosti = num_posti;
         this.durata = durata;
-        this.num_posti_occupati = num_posti_occupati;
+        this.numPostiOccupati = num_posti_occupati;
     }
 
     public String getNome() {
@@ -34,16 +34,16 @@ public class DescrizioneCorso {
         return tipologia_clienti;
     }
 
-    public int getNum_posti() {
-        return num_posti;
+    public int getNumPosti() {
+        return numPosti;
     }
 
     public int getDurata() {
         return durata;
     }
 
-    public int getNum_posti_occupati() {
-        return num_posti_occupati;
+    public int getNumPostiOccupati() {
+        return numPostiOccupati;
     }
     public void setNome(String nome){
         this.nome = nome;
@@ -52,13 +52,13 @@ public class DescrizioneCorso {
         this.tipologia_clienti = tipologia_clienti;
     }
     public void setNumPosti(int num_posti){
-        this.num_posti = num_posti;
+        this.numPosti = num_posti;
     }
     public void setDurata(int durata){
         this.durata = durata;
     }
     public void setNumPostiOccupati(int num_posti_occupati){
-        this.num_posti_occupati = num_posti_occupati;
+        this.numPostiOccupati = num_posti_occupati;
     }
     
     
@@ -67,8 +67,8 @@ public class DescrizioneCorso {
     public String toString() {
     return "Nome: " + nome +
            ", Tipologia clienti: " + tipologia_clienti +
-           ", Posti totali: " + num_posti +
+           ", Posti totali: " + numPosti +
            ", Durata: " + durata + " lezioni" +
-           ", Posti occupati: " + num_posti_occupati;
+           ", Posti occupati: " + numPostiOccupati;
     }
 }

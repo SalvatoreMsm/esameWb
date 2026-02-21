@@ -405,18 +405,75 @@ public class GestoreCorsi {
     }
     
         
-    public synchronized void stampaTutto(){
+    public synchronized void mostraTuttiCorsi(){
         for(Corso c: elencoCorsi.values()){
-            System.out.println(c);
+            c.stampaDettagli();
         }
     }
     
-    public synchronized void stampaLezioni(){
-        for(Corso c : this.elencoCorsi.values()){
-            for(Lezione l : c.getElencoLezioni().values()){
-                System.out.println(l);
+    public void mostraCorso(String idCorso){
+        Corso c;
+        try{
+            c = cercaCorso(idCorso);
+            c.stampaDettagli();
+        }catch(CorsoNonPresenteException e){
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    public void mostraCorsiPerTipologiaClienti(String tipologiaClienti) {
+        boolean trovato = false;
+        for (Corso c : elencoCorsi.values()) {
+            if (c.getDescrizione().getTipologia_clienti().equalsIgnoreCase(tipologiaClienti)) {
+                c.stampaDettagli();
+                trovato = true;
             }
         }
+        if (!trovato) {
+            System.out.println("Nessun corso trovato per la tipologia clienti: " + tipologiaClienti);
+        }
+    }
+    public void mostraCorsiPerPercentualePienezza() {
+        for (Corso c : elencoCorsi.values()) {
+            int numPosti = c.getDescrizione().getNumPosti();
+            int occupati = c.getDescrizione().getNumPostiOccupati();
+            double percentuale = (numPosti > 0) ? (occupati * 100.0 / numPosti) : 0;
+
+            System.out.println("Corso: " + c.getIdCorso() +
+                               " - Nome: " + c.getDescrizione().getNome() +
+                               " - Percentuale Pienezza: " + String.format("%.2f", percentuale) + "%");
+        }
+    }
+    
+    
+    public synchronized void mostraTutteLezioni() {
+
+        System.out.println("========== TUTTE LE LEZIONI ==========");
+
+        boolean trovata = false;
+
+        for (Corso c : elencoCorsi.values()) {
+
+            if (c.getElencoLezioni() != null && !c.getElencoLezioni().isEmpty()) {
+
+                for (Lezione l : c.getElencoLezioni().values()) {
+
+                    System.out.println(
+                        "Corso: " + c.getIdCorso() +
+                        " (" + c.getDescrizione().getNome() + ")" +
+                        " -> " + l.stampaBreve()
+                    );
+
+                    trovata = true;
+                }
+            }
+        }
+
+        if (!trovata) {
+            System.out.println("Nessuna lezione presente nel sistema.");
+        }
+
+        System.out.println("=======================================\n");
     }
     
 }

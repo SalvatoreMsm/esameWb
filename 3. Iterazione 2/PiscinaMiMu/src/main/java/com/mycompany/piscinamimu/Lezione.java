@@ -42,8 +42,8 @@ public class Lezione {
     }
     
     public void addCorsia(Corsia cr) throws CorsiaGiaPresenteException{
-        if(cr == null) throw new CorsiaGiaPresenteException(cr.getNumCorsia());
-        if(cr == this.cr) throw new CorsiaGiaPresenteException(cr.getNumCorsia());
+        if(cr == null) throw new CorsiaGiaPresenteException(cr.getIdCorsia());
+        if(cr == this.cr) throw new CorsiaGiaPresenteException(cr.getIdCorsia());
         this.setCorsia(cr);
     }
     
@@ -78,12 +78,31 @@ public class Lezione {
     }
 
     
-    @Override
-    public String toString() {
-        if(cr != null) return idLezione + " " + oraInizio + "-" + oraFine + "-" + cr;
-        else return idLezione + " " + oraInizio + "-" + oraFine;
+    public String stampaBreve() {
+
+        String s = idLezione + " (" + oraInizio + "-" + oraFine + ")";
+
+        if (cr == null) {
+            s += " - [Corsia NON assegnata]";
+            return s;
+        }
+
+        s += " - Corsia " + cr.getIdCorsia();
+
+        if (cr.getVasca() == null) {
+            s += " - [Vasca NON assegnata]";
+        } else {
+            s += " - Vasca " + cr.getVasca().getIdVasca();
+        }
+
+        return s;
     }
 
+    @Override
+    public String toString() {
+        return "Lezione [ID=" + idLezione +
+               ", Orario=" + oraInizio + "-" + oraFine + "]";
+    }
     
     
 }

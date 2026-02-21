@@ -9,7 +9,7 @@ package com.mycompany.piscinamimu;
  * @author salvatore
  */
 public class CorsiaGiaPresenteException extends Exception{
-    CorsiaGiaPresenteException(int id_corsia){
+    CorsiaGiaPresenteException(String id_corsia){
         super("E' gia presente la corsia: "+id_corsia+" assegnata a questa lezione");
     }
 }
