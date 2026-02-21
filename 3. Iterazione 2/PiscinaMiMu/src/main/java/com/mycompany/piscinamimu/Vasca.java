@@ -45,15 +45,15 @@ public class Vasca {
     }
     
     public void AggiungiCorsia(Corsia cr) throws CorsiaGiaPresenteException{
-        String id_corsia = ""+cr.getNumCorsia();
-        if(this.elenco_corsie.get(id_corsia) != null) throw new CorsiaGiaPresenteException(cr.getNumCorsia());
+        String id_corsia = ""+cr.getIdCorsia();
+        if(this.elenco_corsie.get(id_corsia) != null) throw new CorsiaGiaPresenteException(cr.getIdCorsia());
         this.elenco_corsie.put(id_corsia, cr);
         cr.setVasca(this);
-        System.out.println(this.elenco_corsie.size());
+        System.out.println("Numero di corsie caricate " + this.elenco_corsie.size() + " nella vasca: " + getIdVasca());
     }
     
     public void rimuoviCorsia(Corsia cr) throws CorsiaNonPresenteNellaVascaException{
-        String id_corsia = ""+cr.getNumCorsia();
+        String id_corsia = ""+cr.getIdCorsia();
         if(!this.elenco_corsie.containsKey(id_corsia)) throw new CorsiaNonPresenteNellaVascaException(id_corsia);
         
         this.elenco_corsie.remove(id_corsia);
@@ -61,15 +61,30 @@ public class Vasca {
         cr = null;
     }
     
-    @Override
-    public String toString(){
-        String s = "Vasca: "+this.id_vasca;
-        String p = " contiene corsie:\n";
-        if(this.elenco_corsie == null) {return s;}
-        for(Corsia cr : this.elenco_corsie.values()){
-            p += cr.toString();
+  
+    public void stampaDettagli() {
+
+        System.out.println("=================================");
+        System.out.println(this);
+
+        System.out.println("Corsie:");
+        if (elenco_corsie == null || elenco_corsie.isEmpty()) {
+            System.out.println("  Nessuna corsia presente");
+        } else {
+            for (Corsia c : elenco_corsie.values()) {
+                System.out.println("  - Corsia " + c.getIdCorsia());
+            }
         }
-        return s += p;
+
+        System.out.println("=================================\n");
     }
+        
+    @Override
+    public String toString() {
+        return "Vasca [ID=" + id_vasca +
+               ", Tipo=" + tipo_vasca + "]";
+    }
+    
+    
         
 }

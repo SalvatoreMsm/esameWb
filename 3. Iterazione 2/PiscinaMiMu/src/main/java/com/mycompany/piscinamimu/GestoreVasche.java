@@ -18,7 +18,7 @@ public class GestoreVasche {
         this.elencoVasche = new HashMap<>();
     }
     
-    public Vasca CercaVasca(String id_vasca) throws VascaNonPresenteException{
+    public Vasca cercaVasca(String id_vasca) throws VascaNonPresenteException{
         Vasca v = this.elencoVasche.get(id_vasca);
         
         if(v == null) throw new VascaNonPresenteException(id_vasca);
@@ -32,14 +32,14 @@ public class GestoreVasche {
     }
     
     public void AssegnaCorsiaToVasca(String id_vasca, Corsia cr) throws VascaNonPresenteException, CorsiaGiaPresenteException, CorsiaGiaEsistenteException{
-        Vasca v = this.CercaVasca(id_vasca);
-        String id_corsia = ""+cr.getNumCorsia();
+        Vasca v = this.cercaVasca(id_vasca);
+        String id_corsia = ""+cr.getIdCorsia();
         this.CheckCorsiaNonEsistente(id_corsia);
         v.AggiungiCorsia(cr);
     }
     
     public void RemoveCorsiaToVasca(String id_vasca, String id_corsia) throws VascaNonPresenteException, CorsiaNonPresenteNellaVascaException{
-        Vasca v = this.CercaVasca(id_vasca);
+        Vasca v = this.cercaVasca(id_vasca);
         Corsia cr = v.cercaCorsia(id_corsia);
         cr.RemoveAllLezioni();
         v.rimuoviCorsia(cr);
@@ -74,17 +74,16 @@ public class GestoreVasche {
         try{
             
             BufferedReader bf = new BufferedReader(new FileReader(FILE_CORSIE));
-            String num_corsia_string, id_vasca;
+            String num_corsia, id_vasca;
 
             Corsia cd;
             Vasca v;
 
-            while((num_corsia_string = bf.readLine()) != null){
+            while((num_corsia = bf.readLine()) != null){
                 
-                int num_corsia = Integer.parseInt(num_corsia_string);
                 id_vasca = bf.readLine();
                 
-                v = this.CercaVasca(id_vasca);
+                v = this.cercaVasca(id_vasca);
                 cd = new Corsia(num_corsia);
                 cd.setVasca(v);
                 v.AggiungiCorsia(cd);
@@ -119,15 +118,21 @@ public class GestoreVasche {
     
     
     
-    public synchronized void StampaTutto(){
-        
-        
-        for(Vasca v : elencoVasche.values()){
-            if(v.getElencoCorsie() == null) System.out.println("Nessuna corsia associata alla vasca");
-            System.out.print(v);
-        
-    
+    public synchronized void mostraTutteVasche() {
+        for (Vasca v : elencoVasche.values()) {
+            v.stampaDettagli();
+        }
     }
+    public void mostraVaschePerTipologia(String tipo) {
+        boolean trovato = false;
+        for (Vasca v : elencoVasche.values()) {
+            if (v.getTipoVasca().equalsIgnoreCase(tipo)) {
+                v.stampaDettagli();
+                trovato = true;
+            }
+        }
+        if (!trovato) {
+            System.out.println("Nessuna vasca trovata per il tipo: " + tipo);
+        }
     }
-    
 }

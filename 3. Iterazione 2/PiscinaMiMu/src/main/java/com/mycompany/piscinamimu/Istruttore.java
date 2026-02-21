@@ -12,20 +12,18 @@ import java.util.*;
 public class Istruttore {
     
     private String nome;
+    private String cognome;
     private String id_istruttore;
     private Map<String, Corso> corsi_insegnati;
     
-    public Istruttore(String nome, String id_istruttore){
+    public Istruttore(String nome, String cognome, String id_istruttore){
     
         this.nome = nome;
+        this.cognome = cognome;
         this.id_istruttore = id_istruttore;
         this.corsi_insegnati = new HashMap<>();
     
     };
-
-    public String getNome() {
-        return nome;
-    }
     
     public String getIdIstruttore(){
         return this.id_istruttore;
@@ -57,14 +55,38 @@ public class Istruttore {
         return c;
     }
     
+    
+    public void stampaDettagli() {
+        boolean disponibile;
+
+        System.out.println("=================================");
+        System.out.println(this);
+
+        try {
+            disponibile = this.isDisponibile();
+        } catch (IstruttoreNonDisponibile e) {
+            disponibile = false;
+        }
+        System.out.println("Stato: " + (disponibile ? "Disponibile" : "Occupato"));
+
+        System.out.println("Corsi insegnati:");
+
+        if (corsi_insegnati == null || corsi_insegnati.isEmpty()) {
+            System.out.println("Nessun corso assegnato");
+        } else {
+            for (Corso c : corsi_insegnati.values()) {
+                System.out.println("  - " + c.getIdCorso() +
+                                   " (" + c.getDescrizione().getNome() + ")");
+            }
+        }
+
+        System.out.println("=================================\n");
+    }
+    
     @Override
-    public String toString(){
-    
-            String s = "Nome: " + this.nome + " ID_istruttore: " + this.id_istruttore;
-            return s;
-    
+    public String toString() {
+        return "Istruttore [Nome=" + nome + " " + cognome +
+               ", ID=" + id_istruttore + "]";
     }
     
 }
-
-    

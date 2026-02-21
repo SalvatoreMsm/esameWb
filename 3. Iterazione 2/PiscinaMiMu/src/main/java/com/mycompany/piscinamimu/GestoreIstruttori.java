@@ -23,7 +23,7 @@ public class GestoreIstruttori {
         try{
             
             BufferedReader bf = new BufferedReader(new FileReader(nomeFile));
-            String idIstruttore, nome;
+            String idIstruttore, nome, cognome;
 
             Istruttore is;
             
@@ -31,7 +31,8 @@ public class GestoreIstruttori {
             while((idIstruttore = bf.readLine()) != null){
                 System.out.println("idIstruttore letto: '" + idIstruttore + "'");
                 nome=bf.readLine();
-                AssumiIstruttore(nome, idIstruttore);
+                cognome=bf.readLine();
+                AssumiIstruttore(nome, cognome, idIstruttore);
             }
             System.out.println("Numero istruttori caricati: " + elencoIstruttori.size());
             bf.close();
@@ -44,11 +45,11 @@ public class GestoreIstruttori {
         }
     }
     
-    public synchronized void AssumiIstruttore(String nome, String id_istruttore) throws IstruttoreGiaAssuntoException{
+    public synchronized void AssumiIstruttore(String nome, String cognome, String id_istruttore) throws IstruttoreGiaAssuntoException{
             
             if(elencoIstruttori.containsKey(id_istruttore)) throw new IstruttoreGiaAssuntoException(id_istruttore);
             
-            Istruttore is = new Istruttore(nome, id_istruttore);
+            Istruttore is = new Istruttore(nome, cognome, id_istruttore);
             elencoIstruttori.put(is.getIdIstruttore(), is);
 
     
@@ -61,7 +62,7 @@ public class GestoreIstruttori {
         return elencoIstruttori.get(id_istruttore);
     }
     
-    public synchronized Map<String, Istruttore> VisualizzaIstruttoriDisponibili(){
+    public synchronized Map<String, Istruttore> mostraIstruttoriDisponibili(){
         
         Map<String, Istruttore> elencoIstruttoriDisponibili = new HashMap<>();
         for(Istruttore is: elencoIstruttori.values()){
@@ -77,17 +78,41 @@ public class GestoreIstruttori {
     }
     
     
-    public synchronized void StampaTutto(){
-    
-        for(Istruttore is: elencoIstruttori.values()){
-            System.out.println(is);
-            
-            for(Corso c : is.getCorsi().values()){
-                System.out.println(c.getIdCorso());
+    public synchronized void mostraTuttiIstruttori() {
+        for (Istruttore is : elencoIstruttori.values()) {
+            is.stampaDettagli();
+        }
+    }
+ 
+    public void mostraIstruttoriPerDisponibilita(boolean disponibile) {
+        boolean trovato = false;
+
+        for (Istruttore is : elencoIstruttori.values()) {
+            boolean isDisp;
+            try {
+                isDisp = is.isDisponibile();
+            } catch (IstruttoreNonDisponibile e) {
+                isDisp = false;
             }
-            
-    
+
+            if (isDisp == disponibile) {
+                is.stampaDettagli();
+                trovato = true;
+            }
+        }
+
+        if (!trovato) {
+            String stato = disponibile ? "disponibile" : "occupato";
+            System.out.println("Nessun istruttore " + stato + " trovato.");
+        }
     }
-    }
     
+    public void mostraIstruttore(String idIstruttore) {
+        Istruttore is = elencoIstruttori.get(idIstruttore);
+        if (is == null) {
+            System.out.println("Istruttore non trovato.");
+            return;
+        }
+        is.stampaDettagli();
+    }
 }

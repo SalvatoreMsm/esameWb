@@ -86,36 +86,44 @@ public class Corso {
     }
     
     
-    
+    public void stampaDettagli() {
+
+        System.out.println("=================================");
+        System.out.println("CORSO");
+        System.out.println("ID: " + idCorso);
+        System.out.println(descrizione);
+
+        // LEZIONI
+        System.out.println("\nLezioni:");
+        if (elencoLezioni == null || elencoLezioni.isEmpty()) {
+            System.out.println("  Nessuna lezione presente");
+        } else {
+            for (Lezione l : elencoLezioni.values()) {
+                if(l != null)
+                    System.out.println("  - " + l.stampaBreve());
+            }
+        }
+
+        // ISTRUTTORI
+        System.out.println("\nIstruttori:");
+        if (elencoIstruttori == null || elencoIstruttori.isEmpty()) {
+            System.out.println("  Nessun istruttore assegnato");
+        } else {
+            for (Istruttore is : elencoIstruttori.values()) {
+                System.out.println("  - " + is.toString());
+            }
+        }
+
+        System.out.println("=================================\n");
+    }
     
     
     @Override
     public String toString() {
-        String s;
-        s = "ID Corso: " + idCorso + "\n" +
-                   descrizione + "\n";
-
-        if (elencoLezioni != null && !elencoLezioni.isEmpty()) {
-            s += "Lezioni:\n";
-            for (Lezione l : elencoLezioni.values()) {
-                s += l + "\n"; 
-            }
-        } else {
-            s += "Nessuna lezione presente.\n";
-        }
-
-        if(elencoIstruttori != null && !elencoIstruttori.isEmpty()){
-
-            s += "Istruttori\n";
-            for(Istruttore is : elencoIstruttori.values()){
-                s += is + "\n";
-            }
-
-        }
-        else s += "Nessun istruttore presente";
-
-        return s;
+        return "Corso [ID=" + idCorso +
+               ", Nome=" + descrizione.getNome() + "]";
     }
+    
 
 
     

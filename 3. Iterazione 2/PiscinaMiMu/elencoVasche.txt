@@ -1,8 +1,14 @@
 V01
-Agonistica
+Donne
 V02
-Principianti
+Mista
 V03
-Nuoto Libero
+Uomini
 V04
-Dilettanti
+Bambini
+V05
+Riabilitazione
+V06
+Donne
+V07
+Donne

@@ -11,27 +11,32 @@ import java.util.*;
  */
 public class Corsia {
     
-    private int num_corsia;
-    private Vasca v;
+    private String idCorsia;
+    private Vasca vasca;
     private Map<String, Lezione> elencoLezioniSvolte; 
 
     // Costruttore
     
-    public Corsia(int num_corsia) {
-        this.num_corsia = num_corsia;
+    public Corsia(String idCorsia) {
+        this.idCorsia = idCorsia;
         elencoLezioniSvolte = new HashMap<>();
     }
     
-    public int getNumCorsia(){
-        return this.num_corsia;
+    public String getIdCorsia(){
+        return this.idCorsia;
+    }
+
+    public Vasca getVasca() {
+        return vasca;
     }
     
+    
     public void setVasca(Vasca v){
-        this.v = v;
+        this.vasca = v;
     }
     
     public void RemoveVasca(){
-        this.v = null;
+        this.vasca = null;
     }
     
     public Map<String, Lezione> getElencoLezioni(){
@@ -64,8 +69,9 @@ public class Corsia {
 
     @Override
     public String toString(){
-        String s = ""+this.num_corsia+"\n";
-        return s;
+        if(vasca == null)
+            return "Corsia " + idCorsia + " (vasca NON assegnata)";
+        return "Corsia " + idCorsia + " - Vasca " + vasca.getIdVasca();
     }
     
     

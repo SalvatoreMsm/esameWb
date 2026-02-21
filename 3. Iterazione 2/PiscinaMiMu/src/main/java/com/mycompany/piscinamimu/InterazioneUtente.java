@@ -30,27 +30,27 @@ public class InterazioneUtente{
         this.gv = gv;
     }
     
+    
+    // VARI MENU
+    
     public int menu(BufferedReader bf){
         try{
             //System.out.println("1. Carica corsi da file.");
-            System.out.println("1. Inserisci nuovo corso.");
-            System.out.println("2. Inserisci nuova lezione.");
-            System.out.println("3. Modifica un corso.");
-            System.out.println("4. Assumi Istruttore");
-            System.out.println("5. Assegna Istruttore Ad Un Corso");
-            System.out.println("6. Iscrizione Cliente alla Piscina");
-            System.out.println("7. Inserisci Nuova Vasca");
-            System.out.println("8. Associa una Lezione ad una Corsia");
-            System.out.println("9. Rimuovi Corsia da una Vasca");
-            System.out.println("10. Aggiungi Corsia ad una Vasca");
-            System.out.println("11. Stampa Corsi.");
-            System.out.println("12. Stampa Istruttori Disponibili");
-            System.out.println("13. Stampa Clienti");
-            System.out.println("14. Stampa Vasche");
-            System.out.println("15. Stampa Lezioni");
+            System.out.println("=== MENU PRINCIPALE ===\n");
+            System.out.println("1. Inserisci nuovo corso");
+            System.out.println("2. Modifica un corso");
+            System.out.println("3. Inserisci nuova vasca");
+            System.out.println("4. Iscrizione cliente alla piscina");
+            System.out.println("6. Associa una lezione ad una corsia");
+            System.out.println("7. Visualizza Report");
+            System.out.println("8. Assegna istruttore a un corso");
+            System.out.println("10. Assumi istruttore");
+            System.out.println("11. Modifica Vasca");
 
-            System.out.println("20. EXIT.");
-            System.out.println("\n30. CARICA TUTTI DA FILE.");
+
+            System.out.println("\n** Operazioni Speciali **");
+            System.out.println("20. EXIT");
+            System.out.println("30. CARICA TUTTI DA FILE");
             System.out.println("INSERIRE LA SCELTA --->");
             return Integer.parseInt(bf.readLine());
         }catch(IOException e){
@@ -68,7 +68,7 @@ public class InterazioneUtente{
             System.out.println("4. Modifica Attributi Corso");            
             System.out.println("10 Stampa Corsi.");           
 
-            System.out.println("20. EXIT.");
+            System.out.println("20. Torna al menu principale");
             System.out.println("INSERIRE LA SCELTA --->");
             return Integer.parseInt(bf.readLine());
         }catch(IOException e){
@@ -87,7 +87,7 @@ public class InterazioneUtente{
             System.out.println("5. Modifica Numero Posti Occupati");
             System.out.println("6. Modifica Attributi Delle Lezioni Del Corso");
 
-            System.out.println("20. EXIT.");
+            System.out.println("20. Torna al menu principale");
             System.out.println("INSERIRE LA SCELTA --->");
             return Integer.parseInt(bf.readLine());
         }catch(IOException e){
@@ -102,7 +102,7 @@ public class InterazioneUtente{
             System.out.println("1. Modifica Ora Inizio.");
             System.out.println("2. Modifica Ora Fine.");
             
-            System.out.println("20. EXIT.");
+            System.out.println("20. Torna al menu principale");
             System.out.println("INSERIRE LA SCELTA --->");
             return Integer.parseInt(bf.readLine());
         }catch(IOException e){
@@ -112,7 +112,154 @@ public class InterazioneUtente{
         return 0;
     }
     
-    // FUNZIONI CHE VERRANNO UTILIZZATE NEI CASE
+    public int menuModificaVasca(BufferedReader bf){
+        try{
+            System.out.println("1. Elimina Corsia.");
+            System.out.println("2. Aggiungi Corsia.");
+            System.out.println("20. Torna al menu principale");
+            System.out.println("INSERIRE LA SCELTA --->");
+            return Integer.parseInt(bf.readLine());
+        }catch(IOException e){
+            System.out.println("ERRORE IN FASE DI I/O");
+            System.exit(-1);
+        }
+        return 0;
+    }
+    
+    // FUNZIONE CHE VERRA UTILIZZATA COME MENU DEL REPORT NEL CASE DEL MENU PRINCIPALE
+    
+    
+    private void gestisciMenuVisualizzazioni(BufferedReader bf) throws IOException {
+        int scelta = -1;
+
+        do {
+            System.out.println("===== MENU VISUALIZZAZIONI =====");
+            System.out.println("1. Visualizza Corsi");
+            System.out.println("2. Visualizza Clienti");
+            System.out.println("3. Visualizza Istruttori");
+            System.out.println("4. Visualizza Vasche");
+            System.out.println("5. Visualizza Lezioni");
+            System.out.println("20. Torna al menu principale");
+            System.out.print("Scelta: ");
+
+            scelta = Integer.parseInt(bf.readLine());
+
+            switch (scelta) {
+                case 1: gestisciSottoCorsi(bf); break;
+                case 2: gestisciSottoClienti(bf); break;
+                case 3: gestisciSottoIstruttori(bf); break;
+                case 4: gestisciSottoVasche(bf); break;
+                case 5: gc.mostraTutteLezioni(); break;
+                case 20: System.out.println("Torno al menu principale..."); break;
+                default: System.out.println("Scelta non valida!");
+            }
+
+        } while (scelta != 20);
+    }
+    
+    // FUNZIONI E SOTTOMENU REPORT
+    
+    private void gestisciSottoCorsi(BufferedReader bf) throws IOException {
+        System.out.println("---- VISUALIZZA CORSI ----");
+        System.out.println("1. Mostra Tutti");
+        System.out.println("2. Mostra singolo corso (idCorso)");
+        System.out.println("3. Mostra corsi (tipologiaClienti)");
+        System.out.println("4. Mostra Corsi con percentuale pienezza");
+        System.out.print("Scelta: ");
+        int scelta = Integer.parseInt(bf.readLine());
+
+        switch (scelta) {
+            case 1: gc.mostraTuttiCorsi(); break;
+            case 2:
+                System.out.print("Inserisci idCorso: ");
+                String idCorso = bf.readLine();
+                gc.mostraCorso(idCorso);
+                break;
+            case 3:
+                System.out.print("Inserisci tipologiaClienti: ");
+                String tipoClienti = bf.readLine();
+                gc.mostraCorsiPerTipologiaClienti(tipoClienti);
+                break;
+            case 4: gc.mostraCorsiPerPercentualePienezza(); break;
+            default: System.out.println("Scelta non valida");
+        }
+    }
+
+    
+    private void gestisciSottoClienti(BufferedReader bf) throws IOException {
+        System.out.println("---- VISUALIZZA CLIENTI ----");
+        System.out.println("1. Mostra Tutti");
+        System.out.println("2. Mostra singolo cliente (idCliente)");
+        System.out.println("3. Mostra clienti (tipologia)");
+        System.out.print("Scelta: ");
+        int scelta = Integer.parseInt(bf.readLine());
+
+        switch (scelta) {
+            case 1: gcl.mostraTuttiClienti(); break;
+            case 2:
+               System.out.print("Inserisci idCliente: ");
+               String idCliente = bf.readLine();
+               gcl.mostraCliente(idCliente); // usa il metodo già presente
+               break;
+            case 3:
+                System.out.println("Tipologie disponibili: Donne, Uomini, Bambini, Riabilitazione");
+                System.out.print("Inserisci tipologia: ");
+                try {
+                    Cliente.TipologiaCliente tipologia = Cliente.TipologiaCliente.valueOf(bf.readLine());
+                    gcl.mostraClientiPerTipologia(tipologia);
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Tipologia non valida!");
+                }
+                break;
+            default: System.out.println("Scelta non valida");
+        }
+    }
+    private void gestisciSottoIstruttori(BufferedReader bf) throws IOException {
+        System.out.println("---- VISUALIZZA ISTRUTTORI ----");
+        System.out.println("1. Mostra Tutti");
+        System.out.println("2. Mostra Disponibili");
+        System.out.println("3. Mostra singolo istruttore (idIstruttore)");
+        System.out.println("4. Mostra Occupati (almeno 1 corso)");
+        System.out.print("Scelta: ");
+        int scelta = Integer.parseInt(bf.readLine());
+
+        switch (scelta) {
+            case 1: gi.mostraTuttiIstruttori(); break;
+            case 2: gi.mostraIstruttoriPerDisponibilita(true); break;
+            case 3:
+                System.out.print("Inserisci idIstruttore: ");
+                String idIstruttore = bf.readLine();
+                gi.mostraIstruttore(idIstruttore);
+                break;
+            case 4: gi.mostraIstruttoriPerDisponibilita(false); break;
+            default: System.out.println("Scelta non valida");
+        }
+    }
+    
+    private void gestisciSottoVasche(BufferedReader bf) throws IOException {
+        System.out.println("---- VISUALIZZA VASCHE ----");
+        System.out.println("1. Mostra Tutte");
+        System.out.println("2. Mostra Vasche (tipologia)");
+        System.out.print("Scelta: ");
+        int scelta = Integer.parseInt(bf.readLine());
+
+        switch (scelta) {
+            case 1: gv.mostraTutteVasche(); break;
+            case 2:
+                System.out.print("Inserisci tipo vasca: ");
+                String tipoVasca = bf.readLine();
+                gv.mostraVaschePerTipologia(tipoVasca);
+                break;
+            default: System.out.println("Scelta non valida");
+        }
+    }
+    
+    
+    
+    
+    // FUNZIONI CHE VERRANNO UTILIZZATE NEI CASE DEL MENU PRINCIPALE
+    
+    // UC1
     
     private void gestisciNuovoCorso(BufferedReader bf) throws IOException {
         try {
@@ -129,6 +276,8 @@ public class InterazioneUtente{
             System.out.println("OPS: qualcosa è andato storto!");
         }
     }
+    
+    // UC2
     
     private void gestisciModificaCorso(BufferedReader bf) throws IOException {
         String idCorso;
@@ -162,7 +311,7 @@ public class InterazioneUtente{
                             gestisciModificaAttributiCorso(bf, idCorso);
                             break;
                     case 10:
-                            gc.stampaTutto();
+                            gc.mostraTuttiCorsi();
                             break;
                 }
             } while (sceltaModifica != 20);
@@ -269,25 +418,87 @@ public class InterazioneUtente{
             }
         } while (scelta != 20);
     }
-    private void gestisciAssumiIstruttore(BufferedReader bf){
-        try {
-            System.out.println("Inserisci ID istruttore --->");
-            String id_istruttore = bf.readLine();
-            System.out.println("Inserisci Nome istruttore --->");
-            String nome = bf.readLine();
-            gi.AssumiIstruttore(nome, id_istruttore);
-        } catch (IstruttoreGiaAssuntoException e) {
+    
+    
+    // UC3
+    
+    private void gestisciNuovaVasca(BufferedReader bf) throws IOException{
+        try{
+            System.out.println("Inserisci id nuova vasca --->");
+            String id_vasca = bf.readLine();
+            System.out.println("Inserisci tipologia nuova vasca --->");
+            String tipologia_vasca = bf.readLine();
+
+            gv.aggiungiVasca(tipologia_vasca, id_vasca);
+        }catch(VascaGiaPresenteException e){
             System.out.println(e.getMessage());
-        } catch (Exception e) {
-            System.out.println("OPS: qualcosa è andato storto!");
         }
     }
+    
+    // UC4
+    
+    private void gestisciIscrizionePiscina(BufferedReader bf){
+        try {
+            String idCliente, nome, cognome, tipologia;
+            Cliente.TipologiaCliente tipo;
+
+            System.out.print("Inserisci ID Cliente: ");
+            idCliente = bf.readLine();
+            System.out.print("Inserisci Nome Cliente: ");
+            nome = bf.readLine();
+            System.out.print("Inserisci Cognome Cliente: ");
+            cognome = bf.readLine();
+            System.out.print("Inserisci Tipologia cliente (Donne, Uomini, Bambini, Riabilitazione): ");
+            tipologia = bf.readLine();
+            tipo = Cliente.TipologiaCliente.valueOf(tipologia);
+
+            Cliente nuovoCliente = new Cliente(nome, cognome, idCliente, tipo);
+            try {
+                gcl.aggiungiCliente(nuovoCliente);
+                System.out.println("Cliente aggiunto correttamente!");
+            } catch (ClienteGiaPresenteException e) {
+                System.out.println(e.getMessage());
+            }
+
+        } catch (IOException e) {
+            System.out.println("OPS: errore in lettura input!");
+        }
+    }
+    
+    // UC6
+    
+    private void gestisciAssegnamentoLezioneCorsia(BufferedReader bf) throws IOException{
+        try{
+            System.out.println("Inserisci id corso --->");
+            String id_corso = bf.readLine();
+            System.out.println("Inserisci id lezione --->");
+            String id_lezione = bf.readLine();
+            System.out.println("Inserisci id corsia --->");
+            String id_corsia = bf.readLine();
+
+            Corsia cr = gv.CercaCorsia(id_corsia);
+            gc.AggiungiCorsia(id_corso, id_lezione, cr);
+
+        }catch(CorsoNonPresenteException e){
+            System.out.println(e);
+        }catch(LezioneNonPresenteException e){
+            System.out.println(e);
+        }catch(CorsiaGiaPresenteException e){
+            System.out.println(e);
+        }catch(CorsiaNonEsistenteException e){
+            System.out.println(e);
+        }
+    }
+    
+        
+    // UC8
+    
     private void gestisciAssegnaIstruttore(BufferedReader bf){
         try{
             System.out.println("Scegli Corso A Cui Assegnare Istruttore");
             String id_corso = bf.readLine();
 
-            gi.VisualizzaIstruttoriDisponibili();
+            gi.mostraIstruttoriDisponibili();
 
             System.out.println("Scegli ID Istruttore Da Assegnare al corso: " + id_corso + " --->");
             String id_istruttore = bf.readLine();
@@ -305,31 +516,115 @@ public class InterazioneUtente{
             System.out.println("OPS: qualcosa è andato storto!");
         }
     }
+    
+    
 
-    private void gestisciIscrizionePiscina(BufferedReader bf){
+    // UC10
+    
+    private void gestisciAssumiIstruttore(BufferedReader bf){
+        String id_istruttore, nome, cognome;
         try {
-            String idCliente, nome, cognome;
-
-            System.out.print("Inserisci ID Cliente: ");
-            idCliente = bf.readLine();
-            System.out.print("Inserisci Nome Cliente: ");
+            System.out.println("Inserisci ID istruttore --->");
+            id_istruttore = bf.readLine();
+            System.out.println("Inserisci Nome istruttore --->");
             nome = bf.readLine();
-            System.out.print("Inserisci Cognome Cliente: ");
+            System.out.println("Inserisci Cognome istruttore --->");
             cognome = bf.readLine();
-
-            Cliente nuovoCliente = new Cliente(nome, cognome, idCliente);
-            try {
-                gcl.aggiungiCliente(nuovoCliente);
-                System.out.println("Cliente aggiunto correttamente!");
-            } catch (ClienteGiaPresenteException e) {
-                System.out.println(e.getMessage());
-            }
-
-        } catch (IOException e) {
-            System.out.println("OPS: errore in lettura input!");
+            gi.AssumiIstruttore(nome, cognome, id_istruttore);
+        } catch (IstruttoreGiaAssuntoException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println("OPS: qualcosa è andato storto!");
         }
     }
-    /* Se si vogliono inserire i nomi dei file manualmente
+    
+    // UC11
+    
+    private void gestisciModificaVasca(BufferedReader bf) throws IOException {
+        String idVasca;
+        
+        System.out.print("Inserire ID Vasca da modificare: ");
+        idVasca = bf.readLine();
+        try {
+            gv.cercaVasca(idVasca);
+
+            int sceltaModifica;
+            do {
+                sceltaModifica = menuModificaVasca(bf);
+                switch (sceltaModifica) {
+                    case 1: 
+                            gestisciRimuoviCorsia(bf, idVasca);
+                            break;
+                    case 2: 
+                            gestisciAggiungiCorsia(bf, idVasca);
+                            break;
+                }
+            } while (sceltaModifica != 20);
+
+        } catch (VascaNonPresenteException e) {
+            System.out.println("Errore: " + e.getMessage() + ". Torna al menu principale.");
+        }
+    }
+    
+    
+    private void gestisciAggiungiCorsia(BufferedReader bf, String idVasca) throws IOException{
+        try{
+            
+            System.out.println("Inserire nuova corsia --->");
+            String id_corsia = bf.readLine();
+
+            Corsia cr = new Corsia(id_corsia);
+            gv.AssegnaCorsiaToVasca(idVasca, cr);
+        }catch(CorsiaGiaEsistenteException e){
+            System.out.println(e);
+        }catch(VascaNonPresenteException e){
+            System.out.println(e);
+        }catch(CorsiaGiaPresenteException e){
+            System.out.println(e);
+        } 
+    }
+    
+    private void gestisciRimuoviCorsia(BufferedReader bf, String idVasca) throws IOException{
+        try{
+
+            System.out.println("Inserisci Id Corsia da rimuovere --->");
+            String id_corsia = bf.readLine();
+
+            gv.RemoveCorsiaToVasca(idVasca, id_corsia);
+            
+        }catch(VascaNonPresenteException e){
+            System.out.println(e);
+        }catch(CorsiaNonPresenteNellaVascaException e){
+            System.out.println(e);
+        }
+    } 
+    
+    
+    // 30. CARICAMENTO FILE
+    
+    // MOMENTANEAMENTE SI PREFERISCE QUESTA PER NON INSERIRE MANUALMENTE IL NOME DI OGNI FILE (CHE VERRANNO COMUNQUE FORNITI)
+    
+    private void caricaDaFile() {
+        try {
+            gc.caricaCorsi(FILE_CORSI);
+            gc.caricaLezioni(FILE_LEZIONI);
+            gi.caricaIstruttori(FILE_ISTRUTTORI);
+            gcl.caricaClienti(FILE_CLIENTI);
+            gv.CaricaVasche(FILE_VASCHE);
+            gv.CaricaCorsie(FILE_CORSIE);
+
+            System.out.println("Caricamento completato!");
+
+        }
+        catch(VascaNonPresenteException e){System.out.println(e);}
+        catch(CorsiaGiaPresenteException e){System.out.println(e);}
+        catch (Exception e) {
+            System.out.println("ERRORE IN FASE DEL CARICAMENTO DA FILE");
+            System.exit(-1);
+        }
+    }
+    
+        /* Se si vogliono inserire i nomi dei file manualmente
     
     private void caricaDaFile(){
             BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
@@ -358,31 +653,7 @@ public class InterazioneUtente{
             }
 
     }
-    */
-    
-    private void caricaDaFile() {
-        try {
-            gc.caricaCorsi(FILE_CORSI);
-            gc.caricaLezioni(FILE_LEZIONI);
-            gi.caricaIstruttori(FILE_ISTRUTTORI);
-            gcl.caricaClienti(FILE_CLIENTI);
-            gv.CaricaVasche(FILE_VASCHE);
-            gv.CaricaCorsie(FILE_CORSIE);
-
-            System.out.println("Caricamento completato!");
-
-        }
-        catch(VascaNonPresenteException e){System.out.println(e);}
-        catch(CorsiaGiaPresenteException e){System.out.println(e);}
-        catch (Exception e) {
-            System.out.println("ERRORE IN FASE DEL CARICAMENTO DA FILE");
-            System.exit(-1);
-        }
-    }
-    
-    
-    
-    
+    */    
     
     public void avvia() {
         BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
@@ -395,99 +666,32 @@ public class InterazioneUtente{
                     case 1: // NUOVO CORSO
                             gestisciNuovoCorso(bf);  
                             break;
-                    case 2: // NUOVA LEZIONE
-                            String idCorso;
-                            System.out.print("Inserire ID del corso a cui aggiungere una lezione: ");
-                            idCorso = bf.readLine(); 
-                            gestisciAggiungiLezione(bf, idCorso);        
-                            break;
-                    case 3: // MODIFICA CORSO
+                    case 2: // MODIFICA CORSO
                             gestisciModificaCorso(bf);       
                             break;
-                    case 4: // ASSUMI ISTRUTTORE                     
-                            gestisciAssumiIstruttore(bf);
+                    case 3: // NUOVA VASCA
+                            gestisciNuovaVasca(bf);
                             break;
-                    case 5: // ASSEGNA ISTRUTTORE
+                    case 4: // ISCRIZIONE CLIENTE IN PISCINA
+                            gestisciIscrizionePiscina(bf);
+                            break;
+                    case 6: // ASSEGNAMENTO LEZIONE A CORSIA
+                            gestisciAssegnamentoLezioneCorsia(bf);
+                            break;
+                    case 7: // REPORT --> MENU VISUALIZZAZIONI
+                            gestisciMenuVisualizzazioni(bf);
+                            break;
+                    case 8: // ASSEGNA ISTRUTTORE
                             gestisciAssegnaIstruttore(bf);
                             break;
-                        
-                    case 6: gestisciIscrizionePiscina(bf);
+                    case 10: // ASSUMI ISTRUTTORE                     
+                            gestisciAssumiIstruttore(bf);
                             break;
-                    case 7:
-                            try{
-                            System.out.println("Inserisci id nuova vasca --->");
-                            String id_vasca = bf.readLine();
-                            System.out.println("Inserisci tipologia nuova vasca --->");
-                            String tipologia_vasca = bf.readLine();
-                            
-                            gv.aggiungiVasca(tipologia_vasca, id_vasca);
-                            }catch(VascaGiaPresenteException e){System.out.println(e);}
-                            break;
-                    case 8:
-                            try{
-                            System.out.println("Inserisci id corso --->");
-                            String id_corso = bf.readLine();
-                            System.out.println("Inserisci id lezione --->");
-                            String id_lezione = bf.readLine();
-                            System.out.println("Inserisci id corsia --->");
-                            String id_corsia = bf.readLine();
-                            
-                            Corsia cr = gv.CercaCorsia(id_corsia);
-                            gc.AggiungiCorsia(id_corso, id_lezione, cr);
-                            
-                            }
-                            catch(CorsoNonPresenteException e){System.out.println(e);}
-                            catch(LezioneNonPresenteException e){System.out.println(e);}
-                            catch(CorsiaGiaPresenteException e){System.out.println(e);}
-                            catch(CorsiaNonEsistenteException e){System.out.println(e);}
-                            break;
-                    case 9:
-                            try{
-                                System.out.println("Inserisci Id Vasca da cui rimuovere la corsia --->");
-                                String id_vasca = bf.readLine();
-                                
-                                System.out.println("Inserisci Id Corsia da rimuovere --->");
-                                String id_corsia = bf.readLine();
-                                
-
-                                gv.RemoveCorsiaToVasca(id_vasca, id_corsia);
-                                
-                                
-                            }
-                            catch(VascaNonPresenteException e){System.out.println(e);}
-                            catch(CorsiaNonPresenteNellaVascaException e){System.out.println(e);}
-                            break;
-                    case 10:
-                            try{
-                            System.out.println("Inserire Id della vasca a cui aggiungere corsia --->");
-                            String id_vasca = bf.readLine();
-                            System.out.println("Inserire nuova corsia --->");
-                            String id_corsia = bf.readLine();
-                            
-                            Corsia cr = new Corsia(Integer.parseInt(id_corsia));
-                            gv.AssegnaCorsiaToVasca(id_vasca, cr);
-                            }
-                            catch(CorsiaGiaEsistenteException e){System.out.println(e);}
-                            catch(VascaNonPresenteException e){System.out.println(e);}
-                            catch(CorsiaGiaPresenteException e){System.out.println(e);}
+                    case 11: // MODIFICA VASCA
+                            gestisciModificaVasca(bf);
                             break;
                             
-                    case 11: // STAMPA TUTTO DEI CORSI (UTILITY)
-                            gc.stampaTutto();     
-                            break;
-                    case 12: // STAMPA TUTTO DEGLI ISTRUTTORI (UTILITY)
-                            gi.StampaTutto();               
-                            break;
-                    case 13: // STAMPA TUTTO DEI CLIENTI (UTILITY)
-                            gcl.stampaTuttoClienti();               
-                            break;
-                    case 14: // STAMPA TUTTO DELLE VASCHE (UTILITY)
-                            gv.StampaTutto();               
-                            break;
-                    case 15: //STAMPA TUTTO DELLE LEZIONI (UTILITY)
-                            gc.stampaLezioni();
-                            break;
-                    case 30: // CARICA DA FILE (Al momento carica tutti i file, potrei implementare un menu per far caricare solo quelli che si vogliono)
+                    case 30: // CARICA DA FILE (Al momento carica tutti i file)
                             caricaDaFile();
                             break;
                 }
