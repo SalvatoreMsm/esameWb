@@ -92,5 +92,29 @@ public class GestoreClienti {
         }
     }
     
-    
+   public void IscrizioneClienteCorso(String id_cliente, Corso c) throws PostiPieniException, ClienteNonPresenteException,
+            TipologiaNonCorrispondente, ClienteGiaIscrittoException{
+        Cliente cl = this.getCliente(id_cliente);
+        Map<String, Corso> corsi_iscritti = cl.getCorsiIscritti();
+        if(corsi_iscritti.get(c.getIdCorso()) != null) throw new ClienteGiaIscrittoException(id_cliente, c.getIdCorso());
+        DescrizioneCorso cd = c.getDescrizione();
+        String tipo_corso_string = cd.getTipologia_clienti();
+        
+        if (tipo_corso_string.equalsIgnoreCase("Mista")) {
+            cd.aumentaPostiOccupati();
+            System.out.println("Cliente: "+id_cliente+" aggiunto correttamente al Corso: "+c.getIdCorso()+" con tipo: "+tipo_corso_string);
+            cl.AggiungiCorso(c);
+            return;
+        }
+        
+        Cliente.TipologiaCliente tipo_corso = Cliente.TipologiaCliente.valueOf(cd.getTipologia_clienti());
+        
+        if(cl.getTipologia() == tipo_corso){
+            cd.aumentaPostiOccupati();
+            cl.AggiungiCorso(c);
+            System.out.println("Cliente: "+id_cliente+" aggiunto correttamente al Corso: "+c.getIdCorso()+" con tipo: "+tipo_corso_string);
+        }else throw new TipologiaNonCorrispondente(id_cliente, c);
+        
+        
+    } 
 }

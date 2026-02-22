@@ -61,7 +61,10 @@ public class DescrizioneCorso {
         this.numPostiOccupati = num_posti_occupati;
     }
     
-    
+    public void aumentaPostiOccupati() throws PostiPieniException{
+        if(this.numPostiOccupati == this.numPosti) throw new PostiPieniException(this.nome);
+        this.numPostiOccupati += 1;
+    }
     
     @Override
     public String toString() {

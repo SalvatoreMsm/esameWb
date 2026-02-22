@@ -55,6 +55,10 @@ public class Cliente {
         return tipologia;
     }
     
+    public void AggiungiCorso(Corso c){
+        this.corsiIscritti.put(c.getIdCorso(), c);
+    }
+    
     
     public void stampaDettagli() {
 

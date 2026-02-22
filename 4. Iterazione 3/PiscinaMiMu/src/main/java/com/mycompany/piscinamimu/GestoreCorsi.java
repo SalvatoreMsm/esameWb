@@ -180,9 +180,10 @@ public class GestoreCorsi {
 
 
     
-    public synchronized String aggiungiCorso(){ 
+        public synchronized String aggiungiCorso(){ 
         BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
         String idCorso, nome, tipologiaClienti;
+        tipologiaClienti = "Mista";
         int numPosti, durata;
         Corso corso;
         DescrizioneCorso descrizione;
@@ -198,8 +199,26 @@ public class GestoreCorsi {
             //info per la descrizione
             System.out.println("Nome corso: ");
             nome = bf.readLine();
-            System.out.println("Tipologia clienti: ");
-            tipologiaClienti = bf.readLine();
+            System.out.println("Scegli tipologia clienti corso\n1)Donne\n2)Uomini\n3)Bambini\n4)Mista\n5)Riabilitazione");
+            String scelta = bf.readLine();
+            switch(Integer.parseInt(scelta)){
+                case 1: 
+                        tipologiaClienti = "Donne";
+                        break;
+                case 2: 
+                        tipologiaClienti = "Uomini";
+                        break;
+                case 3: 
+                        tipologiaClienti = "Bambini";
+                        break;
+                case 4: 
+                        tipologiaClienti = "Mista";
+                        break;
+                case 5: 
+                        tipologiaClienti = "Riabilitazione";
+                        break;
+                        
+            }
             System.out.println("Numero posti: ");
             numPosti = Integer.parseInt(bf.readLine());
             if (numPosti <= 0) {
@@ -213,7 +232,7 @@ public class GestoreCorsi {
                 return null;
             }
             
-            descrizione = new DescrizioneCorso(nome, tipologiaClienti, numPosti, durata, numPosti);
+            descrizione = new DescrizioneCorso(nome, tipologiaClienti, numPosti, durata, 0);
             try {
                 aggiungiCorso(idCorso, descrizione);
                 System.out.println("Corso " + idCorso + " aggiunto correttamente!");

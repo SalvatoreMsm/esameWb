@@ -42,6 +42,7 @@ public class InterazioneUtente{
             System.out.println("3. Inserisci nuova vasca");
             System.out.println("4. Iscrizione cliente alla piscina");
             System.out.println("6. Associa una lezione ad una corsia");
+            System.out.println("5. Iscrivi un cliente ad un corso");            
             System.out.println("7. Visualizza Report");
             System.out.println("8. Assegna istruttore a un corso");
             System.out.println("9. Valuta pienezza corsi");
@@ -472,6 +473,28 @@ public class InterazioneUtente{
         }
     }
     
+    // UC5
+    public void gestisciIscrizioneAlCorso(BufferedReader bf){
+        String id_cliente;
+        String id_corso;
+        
+        try{
+            System.out.println("Inseririsci ID Corso: ");
+            id_corso = bf.readLine();
+            Corso c = gc.cercaCorso(id_corso);
+            
+            System.out.println("Inserisci ID Cliente: ");
+            id_cliente = bf.readLine();
+            gcl.IscrizioneClienteCorso(id_cliente, c);
+        }
+        catch(CorsoNonPresenteException e){System.out.println(e.getMessage());}
+        catch(ClienteNonPresenteException e){System.out.println(e.getMessage());}
+        catch(PostiPieniException e){System.out.println(e.getMessage());}
+        catch(TipologiaNonCorrispondente e){System.out.println(e.getMessage());}
+        catch(ClienteGiaIscrittoException e){System.out.println(e.getMessage());}
+        catch(IOException e){System.out.println("OPS: errore in lettura input!");}
+    } 
+    
     // UC6
     
     private void gestisciAssegnamentoLezioneCorsia(BufferedReader bf) throws IOException{
@@ -692,6 +715,9 @@ public class InterazioneUtente{
                     case 4: // ISCRIZIONE CLIENTE IN PISCINA
                             gestisciIscrizionePiscina(bf);
                             break;
+                    case 5: // ISCRIZIONE CLIENTE AL CORSO
+                            gestisciIscrizioneAlCorso(bf);
+                            break;                            
                     case 6: // ASSEGNAMENTO LEZIONE A CORSIA
                             gestisciAssegnamentoLezioneCorsia(bf);
                             break;
