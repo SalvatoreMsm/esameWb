@@ -54,9 +54,11 @@ public class ClienteTest {
     @Test
     public void testToStringContieneInfoCliente() {
         String output = cliente.toString();
+        Cliente cliente = new Cliente("001", "Mario", "Rossi", Cliente.TipologiaCliente.Uomini);
         assertTrue(output.contains("Mario"));
         assertTrue(output.contains("Rossi"));
         assertTrue(output.contains("001"));
+        assertTrue(output.contains("tipologia=Uomini"));
         assertTrue(output.contains("numeroCorsi=0"));
 
         // Ritesto dopo aver aggiunto un corso

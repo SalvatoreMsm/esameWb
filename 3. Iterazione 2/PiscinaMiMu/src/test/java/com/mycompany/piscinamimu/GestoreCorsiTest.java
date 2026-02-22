@@ -228,5 +228,70 @@ public class GestoreCorsiTest {
         istr.AssegnaCorso(c4));
     }
     
+    // ITERAZIONE 2
+    
+    
+    @Test
+    void testAggiungiCorsia_OK() throws Exception {
+        // Creo corso e lo aggiungo
+        gestore.aggiungiCorso("C1", descr);
+        Corso corso = gestore.cercaCorso("C1");
+
+        corso.aggiungiLezione("L1", "10:00", "11:00");
+        Lezione lezione = corso.cercaLezione("L1");
+
+        Corsia corsia = new Corsia("CR1");
+        gestore.AggiungiCorsia("C1", "L1", corsia);
+
+        assertEquals(lezione, corsia.getElencoLezioni().get("L1"));
+        assertEquals(corsia, lezione.getCorsia());
+    }
+
+    @Test
+    void testAggiungiCorsia_CorsoNonPresente() {
+        Corsia corsia = new Corsia("CR1");
+        assertThrows(CorsoNonPresenteException.class,
+                () -> gestore.AggiungiCorsia("C99", "L1", corsia));
+    }
+
+    @Test
+    void testAggiungiCorsia_LezioneNonPresente() throws Exception {
+        gestore.aggiungiCorso("C1", descr);
+        Corsia corsia = new Corsia("CR1");
+
+        assertThrows(LezioneNonPresenteException.class,
+                () -> gestore.AggiungiCorsia("C1", "L99", corsia));
+    }
+
+    @Test
+    void testMostraTuttiCorsi() throws Exception {
+        gestore.aggiungiCorso("C1", descr);
+        assertDoesNotThrow(() -> gestore.mostraTuttiCorsi());
+    }
+
+    @Test
+    void testMostraCorso() throws Exception {
+        gestore.aggiungiCorso("C1", descr);
+        assertDoesNotThrow(() -> gestore.mostraCorso("C1"));
+    }
+
+    @Test
+    void testMostraCorsiPerTipologiaClienti() throws Exception {
+        gestore.aggiungiCorso("C1", descr);
+        assertDoesNotThrow(() -> gestore.mostraCorsiPerTipologiaClienti("Donne"));
+    }
+
+
+    @Test
+    void testMostraTutteLezioni() throws Exception {
+        gestore.aggiungiCorso("C1", descr);
+        Corso corso = gestore.cercaCorso("C1");
+        corso.aggiungiLezione("L1", "10:00", "11:00");
+
+        assertDoesNotThrow(() -> gestore.mostraTutteLezioni());
+    }
+    
+    
+    
 
 }

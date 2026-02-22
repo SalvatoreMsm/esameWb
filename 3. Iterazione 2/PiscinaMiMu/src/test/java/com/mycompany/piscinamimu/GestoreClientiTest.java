@@ -69,4 +69,31 @@ public class GestoreClientiTest {
         assertTrue(clienti.contains(c2));
     }
 
+@Test
+void testMostraTuttiClienti() throws ClienteGiaPresenteException {
+    Cliente c1 = new Cliente("Mario", "Rossi", "001", Cliente.TipologiaCliente.Uomini);
+    Cliente c2 = new Cliente("Luigi", "Bianchi", "002", Cliente.TipologiaCliente.Donne);
+    gestore.aggiungiCliente(c1);
+    gestore.aggiungiCliente(c2);
+
+    gestore.mostraTuttiClienti();
+}
+
+    @Test
+    void testMostraClientiPerTipologiaConClienti() throws ClienteGiaPresenteException {
+        Cliente c1 = new Cliente("Mario", "Rossi", "001", Cliente.TipologiaCliente.Uomini);
+        Cliente c2 = new Cliente("Luigi", "Bianchi", "002", Cliente.TipologiaCliente.Donne);
+        gestore.aggiungiCliente(c1);
+        gestore.aggiungiCliente(c2);
+
+        gestore.mostraClientiPerTipologia(Cliente.TipologiaCliente.Uomini);
+    }
+
+    @Test
+    void testMostraClientiPerTipologiaSenzaClienti() throws ClienteGiaPresenteException {
+        Cliente c = new Cliente("Mario", "Rossi", "001", Cliente.TipologiaCliente.Uomini);
+        gestore.aggiungiCliente(c);
+
+        gestore.mostraClientiPerTipologia(Cliente.TipologiaCliente.Donne);
+    }
 }

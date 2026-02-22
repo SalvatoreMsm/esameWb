@@ -82,4 +82,43 @@ public class GestoreIstruttoriTest {
         assertFalse(disponibili.containsKey("IS2"));
     }
     
+    @Test
+    public void mostraIstruttoriPerDisponibilita_conDisponibili() throws Exception {
+        g.AssumiIstruttore("Piero", "Angela", "IS1");
+        g.AssumiIstruttore("Franco", "Colapinto", "IS2");
+
+        // i1 disponibile, i2 reso non disponibile
+        Istruttore i2 = g.getIstruttore("IS2");
+        DescrizioneCorso cd = new DescrizioneCorso("Nuoto", "Adulti", 10, 5, 0);
+        i2.AssegnaCorso(new Corso("C1", cd));
+        i2.AssegnaCorso(new Corso("C2", cd));
+        i2.AssegnaCorso(new Corso("C3", cd));
+
+        assertDoesNotThrow(() -> g.mostraIstruttoriPerDisponibilita(true));
+    }
+
+    @Test
+    public void mostraIstruttoriPerDisponibilita_senzaDisponibili() throws Exception {
+        g.AssumiIstruttore("Piero", "Angela", "IS1");
+
+        Istruttore i1 = g.getIstruttore("IS1");
+        DescrizioneCorso cd = new DescrizioneCorso("Nuoto", "Adulti", 10, 5, 0);
+        i1.AssegnaCorso(new Corso("C1", cd));
+        i1.AssegnaCorso(new Corso("C2", cd));
+        i1.AssegnaCorso(new Corso("C3", cd));
+
+        assertDoesNotThrow(() -> g.mostraIstruttoriPerDisponibilita(true));
+    }
+
+    @Test
+    public void mostraIstruttore_esistente() throws Exception {
+        g.AssumiIstruttore("Piero", "Angela", "IS1");
+
+        assertDoesNotThrow(() -> g.mostraIstruttore("IS1"));
+    }
+
+    @Test
+    public void mostraIstruttore_nonEsistente() {
+        assertDoesNotThrow(() -> g.mostraIstruttore("NON_ESISTE"));
+    }
 }

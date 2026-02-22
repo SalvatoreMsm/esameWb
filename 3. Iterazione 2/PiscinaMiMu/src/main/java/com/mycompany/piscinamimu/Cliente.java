@@ -76,9 +76,10 @@ public class Cliente {
 
     @Override
     public String toString() {
-        return "Cliente [ID= " + idCliente + ", Nome= " + nome +
-               " " + cognome +
-               ", Tipologia= " + tipologia + "]";
+        return "Cliente[ID=" + idCliente + 
+               ", Nome=" + nome + " " + cognome + 
+               ", tipologia=" + tipologia + 
+               ", numeroCorsi=" + numCorsi() + "]";
     }
     
     

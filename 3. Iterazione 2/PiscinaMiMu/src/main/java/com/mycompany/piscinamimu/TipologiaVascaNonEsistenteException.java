@@ -10,6 +10,6 @@ package com.mycompany.piscinamimu;
  */
 public class TipologiaVascaNonEsistenteException extends Exception{
     public TipologiaVascaNonEsistenteException(String tipo_vasca){
-        super("Non esistono vasche di tipologia: "+tipo_vasca);
+        super("Non esistono vasche di tipologia: "+ tipo_vasca);
     }
 }

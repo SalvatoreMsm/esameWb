@@ -248,7 +248,11 @@ public class InterazioneUtente{
             case 2:
                 System.out.print("Inserisci tipo vasca: ");
                 String tipoVasca = bf.readLine();
+                try{
                 gv.mostraVaschePerTipologia(tipoVasca);
+                }catch(TipologiaVascaNonEsistenteException e){
+                    System.out.println(e.getMessage());
+                }
                 break;
             default: System.out.println("Scelta non valida");
         }

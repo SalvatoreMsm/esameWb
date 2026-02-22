@@ -58,11 +58,24 @@ public class Corsia {
         l.RemoveCorsia();
         this.elencoLezioniSvolte.remove(id_lezione);
     }
-    
+
+    /*
     public void RemoveAllLezioni(){
         for(Lezione l : this.elencoLezioniSvolte.values()){
             l.RemoveCorsia();
             this.elencoLezioniSvolte.remove(l.getIdLezione());
+        }
+    }
+    */
+
+    // REVISIONE POST TEST --> NON SI PUO MODIFICARE UNA MAP MENTRE SI ITERA CON VALUES --> ConcurrentModificationException
+    
+    public void RemoveAllLezioni(){
+        Iterator<Lezione> it = elencoLezioniSvolte.values().iterator();
+        while(it.hasNext()){
+            Lezione l = it.next();
+            l.RemoveCorsia();
+            it.remove(); // rimuove l'elemento corrente in sicurezza
         }
     }
     

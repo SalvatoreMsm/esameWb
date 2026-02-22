@@ -9,7 +9,7 @@ package com.mycompany.piscinamimu;
  * @author salvatore
  */
 public class IstruttoreNonDisponibileException extends Exception{
-    public IstruttoreNonDisponibile(String id_istruttore){
+    public IstruttoreNonDisponibileException(String id_istruttore){
         super("Istruttore: "+id_istruttore+" non disponibile");
     }
 }
