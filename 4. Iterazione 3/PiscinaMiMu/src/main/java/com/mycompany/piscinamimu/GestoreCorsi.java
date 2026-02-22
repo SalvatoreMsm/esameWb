@@ -404,6 +404,31 @@ public class GestoreCorsi {
         
     }
     
+    public List<Corso> getCorsiDaEliminare() {
+        List<Corso> lista = new ArrayList<>();
+
+        for (Corso c : elencoCorsi.values()) {
+            if (c.calcolaPercentualePienezza() <= 20) {
+                lista.add(c);
+            }
+        }
+
+        return lista;
+    }
+    
+    public List<Corso> getCorsiDaAmpliare() {
+        List<Corso> lista = new ArrayList<>();
+
+        for (Corso c : elencoCorsi.values()) {
+            if (c.calcolaPercentualePienezza() >= 90) {
+                lista.add(c);
+            }
+        }
+
+        return lista;
+    }
+    
+    
         
     public synchronized void mostraTuttiCorsi(){
         for(Corso c: elencoCorsi.values()){
@@ -435,13 +460,11 @@ public class GestoreCorsi {
     }
     public void mostraCorsiPerPercentualePienezza() {
         for (Corso c : elencoCorsi.values()) {
-            int numPosti = c.getDescrizione().getNumPosti();
-            int occupati = c.getDescrizione().getNumPostiOccupati();
-            double percentuale = (numPosti > 0) ? (occupati * 100.0 / numPosti) : 0;
 
             System.out.println("Corso: " + c.getIdCorso() +
                                " - Nome: " + c.getDescrizione().getNome() +
-                               " - Percentuale Pienezza: " + String.format("%.2f", percentuale) + "%");
+                               " - Percentuale Pienezza: " +
+                               c.getPercentualePienezzaFormattata() + "%");
         }
     }
     
@@ -475,5 +498,30 @@ public class GestoreCorsi {
 
         System.out.println("=======================================\n");
     }
+    
+    
+    public void visualizzaAnalisiCorsi() {
+
+        List<Corso> daEliminare = getCorsiDaEliminare();
+        List<Corso> daAmpliare = getCorsiDaAmpliare();
+
+        System.out.println("=== CORSI DA ELIMINARE (<=20%) ===");
+        for (Corso c : daEliminare) {
+            System.out.println(c.getIdCorso() + " - " +
+                               c.getDescrizione().getNome() +
+                               " (" + String.format("%.2f",
+                               c.calcolaPercentualePienezza()) + "%)");
+        }
+
+        System.out.println("\n=== CORSI DA AMPLIARE (>=90%) ===");
+        for (Corso c : daAmpliare) {
+            System.out.println(c.getIdCorso() + " - " +
+                               c.getDescrizione().getNome() +
+                               " (" + String.format("%.2f",
+                               c.calcolaPercentualePienezza()) + "%)");
+        }
+    }
+    
+    
     
 }

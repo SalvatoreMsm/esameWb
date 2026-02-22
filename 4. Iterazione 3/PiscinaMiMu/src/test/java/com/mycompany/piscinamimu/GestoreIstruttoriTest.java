@@ -82,6 +82,8 @@ public class GestoreIstruttoriTest {
         assertFalse(disponibili.containsKey("IS2"));
     }
     
+    // ITERAZIONE 2
+    
     @Test
     public void mostraIstruttoriPerDisponibilita_conDisponibili() throws Exception {
         g.AssumiIstruttore("Piero", "Angela", "IS1");

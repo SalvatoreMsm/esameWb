@@ -44,6 +44,7 @@ public class InterazioneUtente{
             System.out.println("6. Associa una lezione ad una corsia");
             System.out.println("7. Visualizza Report");
             System.out.println("8. Assegna istruttore a un corso");
+            System.out.println("9. Valuta pienezza corsi");
             System.out.println("10. Assumi istruttore");
             System.out.println("11. Modifica Vasca");
 
@@ -524,6 +525,16 @@ public class InterazioneUtente{
     }
     
     
+    // UC9
+    
+    private void gestisciValutazionePienezza(BufferedReader bf){
+
+        gc.mostraCorsiPerPercentualePienezza();
+        gc.visualizzaAnalisiCorsi();
+        
+        
+    }   
+    
 
     // UC10
     
@@ -689,6 +700,9 @@ public class InterazioneUtente{
                             break;
                     case 8: // ASSEGNA ISTRUTTORE
                             gestisciAssegnaIstruttore(bf);
+                            break;
+                    case 9: // VALUTA PIENEZZA CORSI
+                            gestisciValutazionePienezza(bf);
                             break;
                     case 10: // ASSUMI ISTRUTTORE                     
                             gestisciAssumiIstruttore(bf);

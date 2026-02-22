@@ -85,6 +85,19 @@ public class Corso {
         return elencoLezioni.containsKey(idLezione);
     }
     
+    public double calcolaPercentualePienezza() {
+        int numPosti = descrizione.getNumPosti();
+        int occupati = descrizione.getNumPostiOccupati();
+
+        return (numPosti > 0) ? (occupati * 100.0 / numPosti) : 0;
+    }
+    // Formatto direttamente come una stringa
+    public String getPercentualePienezzaFormattata() {
+        return String.format("%.2f", calcolaPercentualePienezza());
+    }
+    
+    
+    
     
     public void stampaDettagli() {
 
@@ -123,13 +136,6 @@ public class Corso {
         return "Corso [ID=" + idCorso +
                ", Nome=" + descrizione.getNome() + "]";
     }
-    
-
-
-    
-
-    
-    
     
     
 }
