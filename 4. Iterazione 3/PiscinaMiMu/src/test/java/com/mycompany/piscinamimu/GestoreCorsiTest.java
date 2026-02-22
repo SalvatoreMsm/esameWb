@@ -8,6 +8,7 @@ import java.io.ByteArrayInputStream;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
+import java.util.*;
 
 /**
  *
@@ -292,6 +293,38 @@ public class GestoreCorsiTest {
     }
     
     
+    // ITERAZIONE 3
+
+
+    @Test
+    void testGetCorsiDaEliminare() throws Exception {
+        // Corso con pochi occupati → da eliminare
+        DescrizioneCorso descrLow = new DescrizioneCorso("AcquaGym", "Adulti", 10, 5, 2); // 20%
+        gestore.aggiungiCorso("C1", descrLow);
+
+        // Corso normale → non da eliminare
+        DescrizioneCorso descrNorm = new DescrizioneCorso("Yoga", "Donne", 10, 5, 5); // 50%
+        gestore.aggiungiCorso("C2", descrNorm);
+
+        List<Corso> daEliminare = gestore.getCorsiDaEliminare();
+        assertEquals(1, daEliminare.size());
+        assertEquals("C1", daEliminare.get(0).getIdCorso());
+    }
+
+    @Test
+    void testGetCorsiDaAmpliare() throws Exception {
+        // Corso quasi pieno → da ampliare
+        DescrizioneCorso descrHigh = new DescrizioneCorso("Pilates", "Adulti", 10, 5, 9); // 90%
+        gestore.aggiungiCorso("C3", descrHigh);
+
+        // Corso normale → non da ampliare
+        DescrizioneCorso descrNorm = new DescrizioneCorso("Nuoto", "Donne", 10, 5, 5); // 50%
+        gestore.aggiungiCorso("C4", descrNorm);
+
+        List<Corso> daAmpliare = gestore.getCorsiDaAmpliare();
+        assertEquals(1, daAmpliare.size());
+        assertEquals("C3", daAmpliare.get(0).getIdCorso());
+    }
     
 
 }

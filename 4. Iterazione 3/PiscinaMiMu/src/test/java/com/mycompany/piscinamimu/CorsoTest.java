@@ -84,4 +84,35 @@ public class CorsoTest {
         assertTrue(s.contains("Nome=" + corso.getDescrizione().getNome()));
         assertTrue(corso.getElencoLezioni().containsKey("L1"));
     }
+    
+    // ITERAZIONE 3
+    
+    @Test
+    void testCalcolaPercentualePienezza_standard() {
+        // 0 posti occupati inizialmente
+        descrizione.setNumPostiOccupati(1); // 1 su 10 -> 10%
+        assertEquals(10.0, corso.calcolaPercentualePienezza());
+    }
+
+    @Test
+    void testCalcolaPercentualePienezza_zeroOccupati() {
+        descrizione.setNumPostiOccupati(0); // 0 su 10 -> 0%
+        assertEquals(0.0, corso.calcolaPercentualePienezza());
+    }
+
+    @Test
+    void testCalcolaPercentualePienezza_zeroPosti() {
+        descrizione.setNumPosti(0); // divisione per zero
+        assertEquals(0.0, corso.calcolaPercentualePienezza());
+    }
+
+    @Test
+    void testGetPercentualePienezzaFormattata() {
+        descrizione.setNumPostiOccupati(3); // 3 su 10 -> 30%
+        assertEquals("30.00", corso.getPercentualePienezzaFormattata().replace(',', '.'));    
+    }
+    
+    
+    
+    
 }
