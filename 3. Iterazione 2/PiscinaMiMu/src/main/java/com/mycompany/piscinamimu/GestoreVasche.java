@@ -25,18 +25,39 @@ public class GestoreVasche {
         else return v;
     }
     
-    public void aggiungiVasca(String tipo_vasca, String id_vasca) throws VascaGiaPresenteException{
-        Vasca v = null;
-        //Vasca v = new Vasca(id_vasca);
-        if(this.elencoVasche.containsKey(id_vasca)) throw new VascaGiaPresenteException(id_vasca);
-        if(tipo_vasca.equalsIgnoreCase("Donne"))v = new VascaDonne(id_vasca);
-        if(tipo_vasca.equalsIgnoreCase("Uomini"))v = new VascaUomini(id_vasca);
-        if(tipo_vasca.equalsIgnoreCase("Bambini"))v = new VascaBambini(id_vasca);
-        if(tipo_vasca.equalsIgnoreCase("Mista"))v = new VascaMista(id_vasca);
-        if(tipo_vasca.equalsIgnoreCase("Riabilitazione"))v = new VascaRiabilitazione(id_vasca);
-        
-        this.elencoVasche.put(id_vasca, v);
+    
+    private Vasca creaVasca(Vasca.TipoVasca tipo, String id) {
+
+        switch (tipo) {
+            case DONNE:
+                return new VascaDonne(id);
+            case UOMINI:
+                return new VascaUomini(id);
+            case BAMBINI:
+                return new VascaBambini(id);
+            case MISTA:
+                return new VascaMista(id);
+            case RIABILITAZIONE:
+                return new VascaRiabilitazione(id);
+            default:
+                throw new IllegalStateException("Tipo non gestito");
+        }
     }
+    
+    
+    public void aggiungiVasca(String tipo_vasca, String id_vasca)
+            throws VascaGiaPresenteException, TipologiaVascaNonEsistenteException {
+
+        if (elencoVasche.containsKey(id_vasca)) {
+            throw new VascaGiaPresenteException(id_vasca);
+        }
+
+        Vasca.TipoVasca tipo = Vasca.TipoVasca.fromString(tipo_vasca);
+        Vasca v = creaVasca(tipo, id_vasca);
+
+        elencoVasche.put(id_vasca, v);
+    }
+    
     
     public void AssegnaCorsiaToVasca(String id_vasca, Corsia cr) throws VascaNonPresenteException, CorsiaGiaPresenteException, CorsiaGiaEsistenteException{
         Vasca v = this.cercaVasca(id_vasca);
@@ -52,7 +73,7 @@ public class GestoreVasche {
         v.rimuoviCorsia(cr);
     }
     
-    public void CaricaVasche(String FILE_VASCHE) throws VascaNonPresenteException, VascaGiaPresenteException{
+    public void CaricaVasche(String FILE_VASCHE) throws VascaNonPresenteException, VascaGiaPresenteException, TipologiaVascaNonEsistenteException{
         
         try{
             
@@ -130,49 +151,19 @@ public class GestoreVasche {
             v.stampaDettagli();
         }
     }
-    public void mostraVaschePerTipologia(String tipo) {
+    public void mostraVaschePerTipologia(String tipo) throws TipologiaVascaNonEsistenteException {
+
         boolean trovato = false;
-        String donne = "Donne";
-        String uomini = "Uomini";
-        String bambini = "Bambini";
-        String mista = "Mista";
-        String Riabilitazione = "Riabilitazione";
+
+        Vasca.TipoVasca tipoEnum = Vasca.TipoVasca.fromString(tipo);
+
         for (Vasca v : elencoVasche.values()) {
-            /*if (v.getTipoVasca().equalsIgnoreCase(tipo)) {
+            if (v.getTipo() == tipoEnum) {
                 v.stampaDettagli();
                 trovato = true;
-            }*/
-            if(donne.equalsIgnoreCase(tipo)){
-                if(v instanceof VascaDonne){
-                    v.stampaDettagli();
-                    trovato = true;
-                }
-            }
-            if(uomini.equalsIgnoreCase(tipo)){
-                if(v instanceof VascaUomini){
-                    v.stampaDettagli();
-                    trovato = true;
-                }
-            }
-            if(bambini.equalsIgnoreCase(tipo)){
-                if(v instanceof VascaBambini){
-                    v.stampaDettagli();
-                    trovato = true;
-                }
-            }
-            if(mista.equalsIgnoreCase(tipo)){
-                if(v instanceof VascaBambini){
-                    v.stampaDettagli();
-                    trovato = true;
-                }
-            }
-            if(Riabilitazione.equalsIgnoreCase(tipo)){
-                if(v instanceof VascaRiabilitazione){
-                    v.stampaDettagli();
-                    trovato = true;
-                }
             }
         }
+
         if (!trovato) {
             System.out.println("Nessuna vasca trovata per il tipo: " + tipo);
         }

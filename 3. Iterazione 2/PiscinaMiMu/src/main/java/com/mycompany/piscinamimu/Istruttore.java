@@ -29,11 +29,11 @@ public class Istruttore {
         return this.id_istruttore;
     }
     
-    public boolean isDisponibile() throws IstruttoreNonDisponibile{
+    public boolean isDisponibile() throws IstruttoreNonDisponibileException{
     
         if(corsi_insegnati.size() < 3) return true;
         
-        else throw new IstruttoreNonDisponibile(this.getIdIstruttore());
+        else throw new IstruttoreNonDisponibileException(this.getIdIstruttore());
         
     }
     
@@ -41,9 +41,9 @@ public class Istruttore {
         return this.corsi_insegnati;
     }
     
-    public void AssegnaCorso(Corso c) throws IstruttoreNonDisponibile{
+    public void AssegnaCorso(Corso c) throws IstruttoreNonDisponibileException{
     
-        if(!this.isDisponibile()) throw new IstruttoreNonDisponibile(this.getIdIstruttore());
+        if(!this.isDisponibile()) throw new IstruttoreNonDisponibileException(this.getIdIstruttore());
         
         this.corsi_insegnati.put(c.getIdCorso(), c);
     
@@ -64,7 +64,7 @@ public class Istruttore {
 
         try {
             disponibile = this.isDisponibile();
-        } catch (IstruttoreNonDisponibile e) {
+        } catch (IstruttoreNonDisponibileException e) {
             disponibile = false;
         }
         System.out.println("Stato: " + (disponibile ? "Disponibile" : "Occupato"));
@@ -85,8 +85,8 @@ public class Istruttore {
     
     @Override
     public String toString() {
-        return "Istruttore [Nome=" + nome + " " + cognome +
-               ", ID=" + id_istruttore + "]";
+        return "Istruttore [Nome= " + nome + " " + cognome +
+               ", ID= " + id_istruttore + "]";
     }
     
 }

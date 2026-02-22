@@ -12,4 +12,9 @@ public class VascaMista extends Vasca{
     public VascaMista(String id_corso){
         super(id_corso);
     }
+        
+    @Override
+    public TipoVasca getTipo() {
+        return TipoVasca.MISTA;
+    }
 }

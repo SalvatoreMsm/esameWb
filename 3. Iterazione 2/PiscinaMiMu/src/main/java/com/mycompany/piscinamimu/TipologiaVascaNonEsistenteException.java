@@ -8,13 +8,8 @@ package com.mycompany.piscinamimu;
  *
  * @author salvatore
  */
-public class VascaBambini extends Vasca{
-    public VascaBambini(String id_vasca) {
-        super(id_vasca);
-    }
-     
-    @Override
-    public TipoVasca getTipo() {
-        return TipoVasca.BAMBINI;
+public class TipologiaVascaNonEsistenteException extends Exception{
+    public TipologiaVascaNonEsistenteException(String tipo_vasca){
+        super("Non esistono vasche di tipologia: "+tipo_vasca);
     }
 }

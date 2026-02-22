@@ -56,9 +56,9 @@ public class GestoreIstruttori {
     }
     
     
-    public synchronized Istruttore getIstruttore(String id_istruttore) throws IstruttoreNonDisponibile{
+    public synchronized Istruttore getIstruttore(String id_istruttore) throws IstruttoreNonDisponibileException{
         Istruttore is = elencoIstruttori.get(id_istruttore);
-        if(is == null) throw new IstruttoreNonDisponibile(id_istruttore);
+        if(is == null) throw new IstruttoreNonDisponibileException(id_istruttore);
         return elencoIstruttori.get(id_istruttore);
     }
     
@@ -71,7 +71,7 @@ public class GestoreIstruttori {
                 System.out.println(is);
                 elencoIstruttoriDisponibili.put(is.getIdIstruttore(), is);
             } 
-        }catch(IstruttoreNonDisponibile e){System.out.println(e.getMessage());}
+        }catch(IstruttoreNonDisponibileException e){System.out.println(e.getMessage());}
         }        
         
         return elencoIstruttoriDisponibili;
@@ -91,7 +91,7 @@ public class GestoreIstruttori {
             boolean isDisp;
             try {
                 isDisp = is.isDisponibile();
-            } catch (IstruttoreNonDisponibile e) {
+            } catch (IstruttoreNonDisponibileException e) {
                 isDisp = false;
             }
 

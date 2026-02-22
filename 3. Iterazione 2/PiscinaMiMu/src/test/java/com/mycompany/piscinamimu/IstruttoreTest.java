@@ -19,7 +19,7 @@ public class IstruttoreTest {
     @BeforeEach
     void setUp(){
     
-        is = new Istruttore("Franco", "IS1");
+        is = new Istruttore("Franco", "Colapinto", "IS1");
         cd = new DescrizioneCorso("NuotoSincronizzato", "Donne", 10, 5, 0);
     
     }
@@ -34,13 +34,13 @@ public class IstruttoreTest {
         is.AssegnaCorso(new Corso("C1", cd));
         is.AssegnaCorso(new Corso("C2", cd));
         is.AssegnaCorso(new Corso("C3", cd));
-        assertThrows(IstruttoreNonDisponibile.class, () -> is.isDisponibile());
+        assertThrows(IstruttoreNonDisponibileException.class, () -> is.isDisponibile());
     }
     
     @Test
     public void toString_test(){
         String s = is.toString();
-        assertTrue(s.contains(("Nome: Franco ID_istruttore: IS1")));
+        assertTrue(s.contains(("Istruttore [Nome= Franco Colapinto, ID= IS1]")));
     }
     @Test
     public void assegnaCorso_ok() throws Exception {

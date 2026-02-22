@@ -12,4 +12,9 @@ public class VascaUomini extends Vasca{
     public VascaUomini(String id_vasca){
         super(id_vasca);
     }
+         
+    @Override
+    public TipoVasca getTipo() {
+        return TipoVasca.UOMINI;
+    }
 }

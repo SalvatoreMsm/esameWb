@@ -391,7 +391,7 @@ public class GestoreCorsi {
             is.AssegnaCorso(c);
             }
             catch(CorsoNonPresenteException e){System.out.println(e.getMessage());}
-            catch(IstruttoreNonDisponibile e){System.out.println(e.getMessage());}
+            catch(IstruttoreNonDisponibileException e){System.out.println(e.getMessage());}
     
     }
     

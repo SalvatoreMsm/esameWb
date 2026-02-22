@@ -22,7 +22,7 @@ public class ClienteTest {
 
     @BeforeEach
     public void setUp() {
-        cliente = new Cliente("Mario", "Rossi", "001");
+        cliente = new Cliente("Mario", "Rossi", "001", Cliente.TipologiaCliente.Uomini);
     }
 
     @Test

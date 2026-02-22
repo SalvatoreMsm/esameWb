@@ -16,6 +16,16 @@ public class GestoreClienti {
     public GestoreClienti() {
         this.elencoClienti = new HashMap<>();
     }
+    
+    
+    public Cliente getCliente(String idCliente) {
+        return elencoClienti.get(idCliente);
+    }
+
+    public Collection<Cliente> getElencoClienti() {
+        return elencoClienti.values();
+    }
+    
 
     public void aggiungiCliente(Cliente cliente) throws ClienteGiaPresenteException {
         if (elencoClienti.containsKey(cliente.getIdCliente())) {

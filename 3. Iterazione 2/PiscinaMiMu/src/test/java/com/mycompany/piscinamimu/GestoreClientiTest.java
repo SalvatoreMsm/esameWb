@@ -27,16 +27,16 @@ public class GestoreClientiTest {
 
     @Test
     public void testAggiungiClienteNuovo() throws ClienteGiaPresenteException {
-        Cliente c = new Cliente("Mario", "Rossi", "001");
+        Cliente c = new Cliente("Mario", "Rossi", "001", Cliente.TipologiaCliente.Uomini);
         gestore.aggiungiCliente(c);
         assertEquals(c, gestore.getCliente("001"));
     }
 
     @Test
     public void testAggiungiClienteDuplicato() throws ClienteGiaPresenteException {
-        Cliente c = new Cliente("Mario", "Rossi", "001");
+        Cliente c = new Cliente("Mario", "Rossi", "001", Cliente.TipologiaCliente.Uomini);
         gestore.aggiungiCliente(c);
-        Cliente duplicato = new Cliente("Mario", "Rossi", "001");
+        Cliente duplicato = new Cliente("Mario", "Rossi", "001", Cliente.TipologiaCliente.Uomini);
 
         ClienteGiaPresenteException ex = assertThrows(
             ClienteGiaPresenteException.class,
@@ -47,8 +47,8 @@ public class GestoreClientiTest {
 
     @Test
     void testGetClienteNonEsistente() throws ClienteGiaPresenteException {
-        Cliente c1 = new Cliente("Mario", "Rossi", "001");
-        Cliente c2 = new Cliente("Luigi", "Bianchi", "002");
+        Cliente c1 = new Cliente("Mario", "Rossi", "001", Cliente.TipologiaCliente.Uomini);
+        Cliente c2 = new Cliente("Luigi", "Bianchi", "002", Cliente.TipologiaCliente.Uomini);
         gestore.aggiungiCliente(c1);
         gestore.aggiungiCliente(c2);
 
@@ -58,8 +58,8 @@ public class GestoreClientiTest {
 
     @Test
     public void testGetElencoClienti() throws ClienteGiaPresenteException {
-        Cliente c1 = new Cliente("Mario", "Rossi", "001");
-        Cliente c2 = new Cliente("Luigi", "Bianchi", "002");
+        Cliente c1 = new Cliente("Mario", "Rossi", "001", Cliente.TipologiaCliente.Uomini);
+        Cliente c2 = new Cliente("Luigi", "Bianchi", "002", Cliente.TipologiaCliente.Uomini);
         gestore.aggiungiCliente(c1);
         gestore.aggiungiCliente(c2);
 

@@ -12,4 +12,10 @@ public class VascaDonne extends Vasca{
     public VascaDonne(String id_vasca){
         super(id_vasca);
     }
+    
+         
+    @Override
+    public TipoVasca getTipo() {
+        return TipoVasca.DONNE;
+    }
 }

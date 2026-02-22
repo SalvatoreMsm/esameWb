@@ -12,4 +12,9 @@ public class VascaRiabilitazione extends Vasca{
     public VascaRiabilitazione(String id_vasca){
         super(id_vasca);
     }
+         
+    @Override
+    public TipoVasca getTipo() {
+        return TipoVasca.RIABILITAZIONE;
+    }
 }

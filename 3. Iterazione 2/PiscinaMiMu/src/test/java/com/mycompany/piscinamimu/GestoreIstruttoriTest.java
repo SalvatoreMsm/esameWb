@@ -25,11 +25,12 @@ public class GestoreIstruttoriTest {
     @Test
     public void AssumiIstruttore_ok() throws Exception{
         String nome = "Piero";
+        String cognome = "Angela";
         String id_corso = "IS1";
 
-        g.AssumiIstruttore(nome, id_corso); 
+        g.AssumiIstruttore(nome, cognome, id_corso); 
     
-        Istruttore is = new Istruttore("Piero", "IS1");
+        Istruttore is = new Istruttore("Piero", "Angela", "IS1");
         assertEquals(is.getIdIstruttore(), g.getIstruttore(is.getIdIstruttore()).getIdIstruttore());
     }
     
@@ -37,12 +38,14 @@ public class GestoreIstruttoriTest {
     public void AssumiIstruttore_not_ok() throws Exception{
         String id_istruttore = "IS1";
         String nome = "Franco";
-        g.AssumiIstruttore(nome, id_istruttore);
+        String cognome = "Colapinto";
+        g.AssumiIstruttore(nome, cognome, id_istruttore);
         
         String id_istruttore2 = "IS1";
         String nome2 = "Gianni";
+        String cognome2 = "Morandi";
 
-        assertThrows(IstruttoreGiaAssuntoException.class, () -> g.AssumiIstruttore(nome2, id_istruttore2));       
+        assertThrows(IstruttoreGiaAssuntoException.class, () -> g.AssumiIstruttore(nome2, cognome2, id_istruttore2));       
     }
     
     @Test
@@ -50,18 +53,19 @@ public class GestoreIstruttoriTest {
         
         String id_istruttore = "IS1";
         String nome = "Piero";
-        g.AssumiIstruttore(nome, id_istruttore);
+        String cognome = "Angela";
+        g.AssumiIstruttore(nome, cognome, id_istruttore);
         assertDoesNotThrow(() -> g.mostraTuttiIstruttori());
         
     }
     @Test
     public void getIstruttore_not_ok() {
-        assertThrows(IstruttoreNonDisponibile.class, () -> g.getIstruttore("NON_ESISTE"));
+        assertThrows(IstruttoreNonDisponibileException.class, () -> g.getIstruttore("NON_ESISTE"));
     }
     @Test
     public void visualizzaIstruttoriDisponibili_ok() throws Exception {
-        g.AssumiIstruttore("Piero", "IS1");
-        g.AssumiIstruttore("Franco", "IS2");
+        g.AssumiIstruttore("Piero", "Angela", "IS1");
+        g.AssumiIstruttore("Franco", "Colapinto","IS2");
 
         // Recupera i2 dal gestore
         Istruttore i2 = g.getIstruttore("IS2");

@@ -430,7 +430,9 @@ public class InterazioneUtente{
             String tipologia_vasca = bf.readLine();
 
             gv.aggiungiVasca(tipologia_vasca, id_vasca);
-        }catch(VascaGiaPresenteException e){
+        }
+        catch(TipologiaVascaNonEsistenteException e){System.out.println(e);}
+        catch(VascaGiaPresenteException e){
             System.out.println(e.getMessage());
         }
     }
@@ -509,7 +511,7 @@ public class InterazioneUtente{
 
         }catch(IstruttoreGiaAssegnatoAlCorsoException e){
             System.out.println(e.getMessage());
-        }catch(IstruttoreNonDisponibile e){
+        }catch(IstruttoreNonDisponibileException e){
             System.out.println(e.getMessage());
         }    
         catch(Exception e){

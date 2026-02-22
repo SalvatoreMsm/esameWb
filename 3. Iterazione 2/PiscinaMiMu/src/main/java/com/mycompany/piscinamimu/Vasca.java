@@ -22,7 +22,25 @@ public abstract class Vasca {
         elenco_corsie = new HashMap<>();
     }
     
+    public enum TipoVasca {
+        DONNE,
+        UOMINI,
+        BAMBINI,
+        MISTA,
+        RIABILITAZIONE;
 
+        public static TipoVasca fromString(String tipo)
+                throws TipologiaVascaNonEsistenteException {
+            try {
+                return TipoVasca.valueOf(tipo.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new TipologiaVascaNonEsistenteException(tipo);
+            }
+        }
+    }
+
+    public abstract TipoVasca getTipo();
+    
     
     public String getIdVasca(){
         return this.id_vasca;
@@ -75,9 +93,10 @@ public abstract class Vasca {
         System.out.println("=================================\n");
     }
         
+    
     @Override
     public String toString() {
-        return "Vasca [ID=" + id_vasca;
+        return "Vasca [ID=" + id_vasca + ", Tipo=" + getTipo() + "]";
     }
     
     

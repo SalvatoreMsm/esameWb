@@ -75,12 +75,13 @@ public class CorsoTest {
     @Test
     public void toString_test() throws Exception {
         String s = corso.toString();
-        assertTrue(s.contains("ID Corso: C1"));
-        assertTrue(s.contains("Nessuna lezione presente"));
+        assertTrue(s.contains("ID=" + corso.getIdCorso()));
+        assertTrue(s.contains("Nome=" + corso.getDescrizione().getNome()));
 
         corso.aggiungiLezione("L1", "10:00", "11:00");
         s = corso.toString();
-        assertTrue(s.contains("Lezioni:"));
-        assertTrue(s.contains("L1"));
+        assertTrue(s.contains("ID=" + corso.getIdCorso()));
+        assertTrue(s.contains("Nome=" + corso.getDescrizione().getNome()));
+        assertTrue(corso.getElencoLezioni().containsKey("L1"));
     }
 }

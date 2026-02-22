@@ -203,7 +203,7 @@ public class GestoreCorsiTest {
     }
     @Test
     public void AssegnaCorso_ok() throws Exception {
-        Istruttore istr = new Istruttore("I1", "Mario");
+        Istruttore istr = new Istruttore("I1", "Mario", "Rossi");
         gestore.aggiungiCorso("C10", descr);
         Corso c = gestore.cercaCorso("C10");
 
@@ -214,15 +214,19 @@ public class GestoreCorsiTest {
 
     @Test
     public void AssegnaCorso_nonDisponibile() throws Exception {
-        Istruttore istr = new Istruttore("I2", "Luca");
-        gestore.aggiungiCorso("C11", descr);
-        Corso c = gestore.cercaCorso("C11");
+        Istruttore istr = new Istruttore("I2", "Luca", "Russo");
+        Corso c1 = new Corso("C1", descr);
+        Corso c2 = new Corso("C2", descr);
+        Corso c3 = new Corso("C3", descr);
+        istr.AssegnaCorso(c1);
+        istr.AssegnaCorso(c2);
+        istr.AssegnaCorso(c3);
 
-        assertThrows(IstruttoreNonDisponibile.class, () -> 
-            istr.AssegnaCorso(c)
-        );
+        Corso c4 = new Corso("C4", descr);
+
+        assertThrows(IstruttoreNonDisponibileException.class, () -> 
+        istr.AssegnaCorso(c4));
     }
-    
     
 
 }

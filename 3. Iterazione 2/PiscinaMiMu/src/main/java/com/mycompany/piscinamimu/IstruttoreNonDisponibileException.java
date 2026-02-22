@@ -8,13 +8,8 @@ package com.mycompany.piscinamimu;
  *
  * @author salvatore
  */
-public class VascaBambini extends Vasca{
-    public VascaBambini(String id_vasca) {
-        super(id_vasca);
-    }
-     
-    @Override
-    public TipoVasca getTipo() {
-        return TipoVasca.BAMBINI;
+public class IstruttoreNonDisponibileException extends Exception{
+    public IstruttoreNonDisponibile(String id_istruttore){
+        super("Istruttore: "+id_istruttore+" non disponibile");
     }
 }

@@ -212,16 +212,22 @@ public class GestoreCorsiTest {
         assertTrue(istr.getCorsi().containsKey("C10"));
     }
 
-    @Test
+   @Test
     public void AssegnaCorso_nonDisponibile() throws Exception {
         Istruttore istr = new Istruttore("I2", "Luca");
-        gestore.aggiungiCorso("C11", descr);
-        Corso c = gestore.cercaCorso("C11");
+        Corso c1 = new Corso("C1", descr);
+        Corso c2 = new Corso("C2", descr);
+        Corso c3 = new Corso("C3", descr);
+        istr.AssegnaCorso(c1);
+        istr.AssegnaCorso(c2);
+        istr.AssegnaCorso(c3);
+
+        Corso c4 = new Corso("C4", descr);
 
         assertThrows(IstruttoreNonDisponibile.class, () -> 
-            istr.AssegnaCorso(c)
-        );
+        istr.AssegnaCorso(c4));
     }
+    
     
     
 
